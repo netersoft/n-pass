@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>CFBundleDevelopmentRegion</key>
+		<string>$(DEVELOPMENT_LANGUAGE)</string>
+		<key>CFBundleDisplayName</key>
+		<string>App Name</string>
+		<key>CFBundleExecutable</key>
+		<string>$(EXECUTABLE_NAME)</string>
+		<key>CFBundleIdentifier</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleInfoDictionaryVersion</key>
+		<string>6.0</string>
+		<key>CFBundleName</key>
+		<string>App Name</string>
+		<key>CFBundlePackageType</key>
+		<string>APPL</string>
+		<key>CFBundleShortVersionString</key>
+		<string>$(FLUTTER_BUILD_NAME)</string>
+		<key>CFBundleSignature</key>
+		<string>????</string>
+		<key>CFBundleVersion</key>
+		<string>$(FLUTTER_BUILD_NUMBER)</string>
+		<key>LSRequiresIPhoneOS</key>
+		<true/>
+		<key>UILaunchStoryboardName</key>
+		<string>LaunchScreen</string>
+		<key>UIMainStoryboardFile</key>
+		<string>Main</string>
+		<key>UISupportedInterfaceOrientations</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+		<key>UISupportedInterfaceOrientations~ipad</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationPortraitUpsideDown</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+		<true/>
+		<key>UIApplicationSupportsIndirectInputEvents</key>
+		<true/>
+		<key>UIStatusBarHidden</key>
+		<true/>
+		<key>UIViewControllerBasedStatusBarAppearance</key>
+		<false/>
+		<key>GIDClientID</key>
+		<string>317129977453-j7p8qeb45m82scgdkl9n89ah50r6e7ld.apps.googleusercontent.com</string>
+		<key>GIDServerClientID</key>
+		<string>317129977453-00pgfviff0p554fv5bcqm7vat35muv72.apps.googleusercontent.com</string>
+		<!-- Google Sign-in Section -->
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.317129977453-j7p8qeb45m82scgdkl9n89ah50r6e7ld</string>
+					<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+				</array>
+			</dict>
+		</array>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>google</string>
+			<string>com.googleusercontent.apps.317129977453-j7p8qeb45m82scgdkl9n89ah50r6e7ld</string>
+		</array>
+		<key>NSAppleMusicUsageDescription</key>
+        <string>This app needs access to your media library to let you select and upload photos. It does not access your music content.</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>This app needs access to your photo library so you can select photos to upload or edit.</string>
+		<key>NSCameraUsageDescription</key>
+        <string>This app needs access to your camera to let you take photos to upload.</string>
+        <key>NSMicrophoneUsageDescription</key>
+        <string>This app needs microphone access to let you record audio while capturing videos.</string>
+        <key>NSLocationAlwaysUsageDescription</key>
+        <string>This app needs your location to provide location-based features, even when the app is not in use.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+        <string>This app needs your location to provide location-based features, even when you're not using the app.</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+        <string>This app needs your location to show relevant information while you're using the app.</string>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>remote-notification</string>
+		</array>
+	</dict>
+</plist>

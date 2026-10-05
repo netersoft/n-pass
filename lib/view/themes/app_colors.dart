@@ -1,0 +1,47 @@
+import 'dart:ui';
+
+abstract class AppColors {
+  static const skyBlue = Color(0xff009ee3);
+  static const lightBlue = Color(0xff87CEEB);
+  static const deepSkyBlue = Color(0xff00BFFF);
+  static const dodgerBlue = Color(0xff1E90FF);
+  static const aurore = Color(0xffffcb60);
+  static const orange = Color(0xfffbb03b);
+  static const darkOrange = Color(0xfff7931e);
+  static const deepGreen = Color(0xff008577);
+  static const darkGreen = Color(0xff00574B);
+  static const darkPink = Color(0xffD81B60);
+  static const pink = Color(0xffFF4081);
+  static const white = Color(0xffffffff);
+  static const silver = Color(0xffdcdcdc);
+  static const dimGray = Color(0xff696969);
+  static const gray = Color(0xff808080);
+  static const darkGray = Color(0xffA9A9A9);
+  static const black = Color(0xff000000);
+  static const red = Color(0xffFF0000);
+  static const yellow = Color(0xffFFFF00);
+  static const goldenYellow = Color(0xffFFD700);
+  static const goldenRod = Color(0xffDAA520);
+  static const green = Color(0xff008000);
+  static const heinekenGreen = Color(0xff008200);
+  static const forestGreen = Color(0xff228B22);
+  static const limeGreen = Color(0xff32DC32);
+  static const lime = Color(0xff00FF00);
+  static const ghostWhite = Color(0xffF8F8FF);
+  static const concrete = Color(0xffF2F2F2);
+  static const whiteSmoke = Color(0xffF5F5F5);
+  static const etain = Color(0xffDCDCDC);
+  static const blue = Color(0xff0000CD);
+  static const violet = Color(0xff8359A3);
+  static const yellowGreen = Color(0xffC5E17A);
+  static const redOrange = Color(0xffFF3F34);
+  static const brown = Color(0xffAF593E);
+  static const snow = Color(0xfffafafa);
+  static const pinkSwain = Color(0xffb5b5b5);
+  static const raisinBlack = Color(0xff262626);
+  static const supernova = Color(0xffffac35);
+  static const kournikova = Color(0xffffcc55);
+  static const honeydew = Color(0xfff8faf8);
+  static const navyBlue = Color(0xff0071bc);
+  static const blackRussian = Color(0xff202124);
+}
