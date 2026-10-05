@@ -1,3 +1,6 @@
+# Legacy native Android app, kept locally for reference only
+/.legacy/
+
 # Miscellaneous
 *.class
 *.log

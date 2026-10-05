@@ -1,71 +1,53 @@
-# Flutter Starter - Agent Guide
+# NPass - Agent Guide
+
+Offline password manager (Android + iOS), Flutter rewrite of the legacy native app kept in `.legacy/` (git-ignored, reference only).
 
 ## Project Setup
 
 ```bash
-# Install dependencies
 flutter pub get
-
-# Generate Slang translations
 dart run slang
-
-# Run codegen (Riverpod, JSON serializable, Hive)
-dart run build_runner build
-
-# Run app
-flutter run
+dart run build_runner build --delete-conflicting-outputs
+flutter run --flavor dev   # Android (flavors: dev, staging, prod)
+flutter run                # iOS
 ```
 
 ## Essential Commands
 
 ```bash
-# Rename app (all displays)
-dart run rename_app:main all="My App Name"
-
-# Change Android/iOS package name
-dart run change_app_package_name:main com.new.package.name
-
 # Generate launcher icons (from assets/images/launcher/icon.png)
 dart run icons_launcher:create
 
 # Generate splash screen
 dart run flutter_native_splash:create
-
-# Remove default splash
-dart run flutter_native_splash:remove
 ```
 
 ## Code Quality
 
 ```bash
-# Lint + static analysis
-flutter analyze
-dart analyze
-
-# Format
 dart format .
+flutter analyze
+flutter test
 ```
 
 ## Architecture
 
 - **Entry point**: `lib/main.dart`
-- **Core layer** (`lib/core/`): providers, services, models, routes, helpers, data
-- **View layer** (`lib/view/`): screens, components, layouts, themes
+- **Core layer** (`lib/core/`): providers, services, routes, helpers, tools
+- **View layer** (`lib/view/`): screens, components, themes
 - **State management**: Riverpod with code generation (`riverpod_generator`)
-- **Routing**: go_router
-- **Local storage**: Hive CE + SharedPreferences
-- **API**: REST with json_serializable
+- **Routing**: go_router (`go_router_builder`)
+- **Local storage**: Hive CE + `flutter_secure_storage` + SharedPreferences
+- **i18n**: Slang, `assets/i18n/*.i18n.json` (base locale fr)
 
-## Environment
+## Constraints
 
-- Copy `.env.example` to `.env` before running
-- SDK: `>=3.8.0 <4.0.0`
+- Fully offline: no backend, no Firebase, no analytics or ad SDKs. Check the merged Android manifest for unexpected permissions when adding a plugin.
+- Android `applicationId` is `com.neteru.n_pass` (existing Play Store listing); iOS bundle id is `com.neteru.npass`.
 
 ## Testing
 
-Unit tests live under `test/` (`api/`, `helpers/`, `providers/`), using `mocktail` with a
-GetIt test-locator override (`test/helpers/test_utils.dart`) to mock infrastructure
-singletons. There are no widget, golden, or integration tests yet.
+Unit tests live under `test/`, using `mocktail` with a GetIt test-locator override (`test/helpers/test_utils.dart`).
 
 ```bash
 flutter test

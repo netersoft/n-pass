@@ -148,20 +148,6 @@ class SettingsListWrapper extends ConsumerWidget {
             ),
           ],
         ),
-        /* SettingsSection(
-          title: Text('notifications'.tr()),
-          tiles: <SettingsTile>[
-            SettingsTile.switchTile(
-              onToggle: (value) => settings.toggleEnableNotificationsState(value),
-              initialValue: settings.getEnableNotificationsState()!,
-              leading: Icon(
-                settings.getEnableNotificationsState()! ? Icons.notifications_on : Icons.notifications_off,
-              ),
-              title: Text('enableNotifications'.tr()),
-              activeSwitchColor: AppTheme.secondaryColor,
-            ),
-          ],
-        ), */
         SettingsSection(
           tiles: <SettingsTile>[
             SettingsTile.navigation(

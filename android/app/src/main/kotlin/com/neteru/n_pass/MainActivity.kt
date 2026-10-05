@@ -1,4 +1,4 @@
-package com.example.flutter_project_template
+package com.neteru.n_pass
 
 import io.flutter.embedding.android.FlutterActivity
 

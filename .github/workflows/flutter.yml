@@ -1,8 +1,5 @@
-# Deliberately NOT calling edpage-hq/.github's reusable flutter-test.yml: that
-# workflow only runs `flutter pub get` + analyze/format/test, with no codegen
-# (slang, build_runner) or .env creation step -- both required for this repo
-# to even compile. Switch the `quality` job to call the reusable workflow
-# once it grows optional inputs for a codegen command and an env file secret.
+# Codegen (slang, build_runner) is required before the app compiles, so the
+# quality job runs it before format/analyze/test.
 name: Flutter
 
 on:
@@ -37,9 +34,6 @@ jobs:
           dart run build_runner build --delete-conflicting-outputs
           dart format .
 
-      - name: Create .env
-        run: touch .env
-
       - name: Verify formatting
         run: dart format --set-exit-if-changed .
 
@@ -47,11 +41,9 @@ jobs:
         run: flutter analyze
 
       - name: Test
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
-          flutter test --coverage
+        run: flutter test --coverage
 
-      # Generated files (*.g.dart, *.config.dart, firebase_options.dart) are
+      # Generated files (*.g.dart, *.config.dart) are
       # excluded from the count -- they're regenerated glue, not code this
       # repo's tests are meant to exercise. 10% is a floor below current
       # hand-written coverage (~14%), meant to catch regressions; raise it
@@ -59,7 +51,7 @@ jobs:
       - name: Enforce coverage floor
         run: |
           awk -v thresh=10 '
-            /^SF:/ { file=$0; sub("^SF:", "", file); skip = (file ~ /\.g\.dart$/ || file ~ /\.config\.dart$/ || file ~ /firebase_options\.dart$/) }
+            /^SF:/ { file=$0; sub("^SF:", "", file); skip = (file ~ /\.g\.dart$/ || file ~ /\.config\.dart$/) }
             /^LF:/ { n=$0; sub("^LF:", "", n); if (!skip) lf += n }
             /^LH:/ { n=$0; sub("^LH:", "", n); if (!skip) lh += n }
             END {
@@ -100,15 +92,9 @@ jobs:
           dart run slang
           dart run build_runner build --delete-conflicting-outputs
 
-      - name: Create .env
-        run: echo "${{ secrets.ENV_FILE }}" > .env
-
-      # Signed with the debug key unless the project has its own key.properties +
-      # keystore configured (see android/app/build.gradle). Good enough to smoke-test
-      # that Android release builds succeed and to hand out for manual QA; a real
-      # release keystore is required before publishing to the Play Store.
-      # --flavor prod: a tagged release is a production build (see README >
-      # Build Flavors) -- also doubles as CI coverage for the flavor setup itself.
+      # Signed with the debug key (key.properties is not available in CI): this
+      # smoke-tests the release build. Store uploads are built locally with the
+      # Neteru upload key (see README > Release builds).
       - name: Build release APK
         run: flutter build apk --release --flavor prod
 
@@ -143,13 +129,6 @@ jobs:
           dart run slang
           dart run build_runner build --delete-conflicting-outputs
 
-      - name: Create .env
-        run: echo "${{ secrets.ENV_FILE }}" > .env
-
-      # No code signing available for a shared starter template (that requires a
-      # real Apple Developer account/certificates), so this only proves the iOS
-      # side still compiles -- it does not produce an installable/distributable
-      # .ipa. Add signing (Fastlane match, App Store Connect API key, etc.) once
-      # a downstream project has its own Apple Developer credentials.
+      # No code signing in CI: this only proves the iOS side still compiles.
       - name: Build iOS (no code signing)
         run: flutter build ios --release --no-codesign

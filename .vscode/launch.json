@@ -5,20 +5,23 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "flutter_project_template",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "flutter_project_template (profile mode)",
+            "name": "n_pass (dev)",
             "request": "launch",
             "type": "dart",
+            "args": ["--flavor", "dev"]
+        },
+        {
+            "name": "n_pass (dev, profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "args": ["--flavor", "dev"],
             "flutterMode": "profile"
         },
         {
-            "name": "flutter_project_template (release mode)",
+            "name": "n_pass (prod, release mode)",
             "request": "launch",
             "type": "dart",
+            "args": ["--flavor", "prod"],
             "flutterMode": "release"
         }
     ]

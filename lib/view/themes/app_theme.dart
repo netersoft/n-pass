@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../core/enums/app_brightness.dart';
-import '../../core/extensions/color_extension.dart';
 import '../../core/services/di/locator.dart';
 import '../../core/services/shared_preferences/keys.dart';
 import '../../core/services/shared_preferences/service.dart';
@@ -13,15 +11,9 @@ import '../../core/tools/functions/color_functions.dart';
 import 'app_colors.dart';
 
 abstract class AppTheme {
-  static final Color primaryColor = ColorX.fromHex(
-    dotenv.get('APP_PRIMARY_COLOR'),
-  );
-  static final Color secondaryColor = ColorX.fromHex(
-    dotenv.get('APP_SECONDARY_COLOR'),
-  );
-  static final Color accentColor = ColorX.fromHex(
-    dotenv.get('APP_ACCENT_COLOR'),
-  );
+  static const Color primaryColor = Color(0xFF0000CD);
+  static const Color secondaryColor = Color(0xFF009EE3);
+  static const Color accentColor = Color(0xFFF5F5F5);
 
   static const String _fontFamily = 'montserrat';
 

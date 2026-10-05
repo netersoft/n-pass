@@ -37,7 +37,7 @@ if (flutterMinSdkVersion == null) {
 }
 
 android {
-    namespace "com.example.flutter_project_template"
+    namespace "com.neteru.n_pass"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -52,7 +52,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.flutter_project_template"
+        applicationId "com.neteru.n_pass"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutterMinSdkVersion.toInteger()
@@ -79,16 +79,16 @@ android {
         dev {
             dimension "env"
             applicationIdSuffix ".dev"
-            resValue "string", "app_name", "App Name (Dev)"
+            resValue "string", "app_name", "NPass (Dev)"
         }
         staging {
             dimension "env"
             applicationIdSuffix ".staging"
-            resValue "string", "app_name", "App Name (Staging)"
+            resValue "string", "app_name", "NPass (Staging)"
         }
         prod {
             dimension "env"
-            resValue "string", "app_name", "App Name"
+            resValue "string", "app_name", "NPass"
         }
     }
 
@@ -108,8 +108,9 @@ android {
             // so `flutter build apk --release` keeps working out of the box.
             signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
 
-            minifyEnabled false
-            shrinkResources false
+            // R8: strips unused code and resources from the release build.
+            minifyEnabled true
+            shrinkResources true
         }
         debug {
             minifyEnabled false

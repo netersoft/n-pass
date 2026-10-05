@@ -1,5 +1,5 @@
-import 'package:flutter_starter/core/services/i18n/translations.g.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:n_pass/core/services/i18n/translations.g.dart';
 
 void main() {
   group('LocaleSettings', () {

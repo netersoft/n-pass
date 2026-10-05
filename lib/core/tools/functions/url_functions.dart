@@ -1,9 +1,3 @@
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as p;
-
-import '../../enums/image_size.dart';
-import '../../services/api/config.dart';
-
 // Validates http/https URLs: domains, IPv4, IPv6, IDN, ports
 // [allowLocal] accepts localhost, loopback IPs, and private network ranges
 bool isUrl(String value, {bool allowLocal = false}) {
@@ -64,82 +58,6 @@ bool isLocalIPv4(List<int> o) =>
 bool isLocalIPv6(String host) {
   final h = host.toLowerCase();
   return h == '::1' || h.startsWith('fc') || h.startsWith('fd') || h.startsWith('fe80');
-}
-
-/// Encoding a file path to a URL.
-String fileUrl(String path) {
-  if (path.isNotEmpty) {
-    String encodedPath = Uri.encodeFull(path);
-
-    if (isUrl(encodedPath)) {
-      return encodedPath;
-    } else {
-      return '${ApiConfig.baseUrl}/storage/$encodedPath';
-    }
-  }
-
-  return '';
-}
-
-/// Resolve an URL from a given path.
-String resolveUrl(String path) {
-  String encodedPath = Uri.encodeFull(path);
-
-  if (isUrl(encodedPath)) {
-    return encodedPath;
-  } else {
-    return '${ApiConfig.baseUrl}/${removeLeadingSlash(encodedPath)}';
-  }
-}
-
-/// Retrieves an image URL based on the specified path and size.
-Future<String> getImageUrl(
-  String path, {
-  ImageSize size = ImageSize.original,
-  String thumbnailsPath = 'thumbnails',
-}) async {
-  const checkableSizes = [ImageSize.small, ImageSize.medium, ImageSize.large];
-  final imageName = path.split('/').last;
-  var canUseIt = false;
-
-  for (final checkableSize in checkableSizes) {
-    if (checkableSize == size) canUseIt = true;
-
-    if (canUseIt) {
-      try {
-        final url = fileUrl('$thumbnailsPath/${checkableSize.size}/$imageName');
-        final response = await http.head(Uri.parse(url));
-        if (response.statusCode == 200) {
-          return url;
-        }
-      } catch (error) {
-        // If an error occurs (e.g., 404 Not Found), continue to the next link
-      }
-    }
-  }
-
-  return fileUrl(path);
-}
-
-/// Retrieves an video thumbnail URL based on the specified path.
-Future<String> getVideoThumbnailUrl(
-  String path, {
-  String fallbackPath = '',
-  String thumbnailsPath = 'thumbnails',
-}) async {
-  final videoName = p.basenameWithoutExtension(path);
-
-  try {
-    final url = fileUrl('$thumbnailsPath/video/$videoName.jpg');
-    final response = await http.head(Uri.parse(url));
-    if (response.statusCode == 200) {
-      return url;
-    }
-  } catch (error) {
-    //
-  }
-
-  return fileUrl(fallbackPath);
 }
 
 /// Removes the leading slash from a given path.
