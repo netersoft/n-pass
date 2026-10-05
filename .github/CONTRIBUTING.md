@@ -1,10 +1,10 @@
-# Contributing to edpage-hq projects
+# Contributing to Netersoft projects
 
 This guide applies to every repository in the organization. For the full project canvas (README template, Definition of Done, ADRs...), see [project-guidelines](https://github.com/edpage-hq/project-guidelines).
 
 ## Git workflow
 
-edpage-hq projects follow **GitHub Flow**: `master` is the only long-lived
+Netersoft projects follow **GitHub Flow**: `master` is the only long-lived
 branch and is always deployable. There's no `develop`, `release`, or
 long-lived environment branch.
 

@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../enums/app_brightness.dart';
-import '../../helpers/account/auth_helper.dart';
 import '../../helpers/router/navigation_helper.dart';
 import '../../routes/app_route.dart';
 import '../../services/di/locator.dart';
@@ -24,8 +23,6 @@ class Redirection extends _$Redirection {
 
   Future redirect(WidgetRef ref) async {
     final SharedPreferencesService prefs = locator<SharedPreferencesService>();
-
-    unawaited(AuthHelper.reloadUserData());
 
     bool? firstOpening = prefs.getBool(
       PrefKeys.firstOpening,

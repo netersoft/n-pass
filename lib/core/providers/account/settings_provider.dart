@@ -33,7 +33,7 @@ class Settings extends _$Settings {
     return t.installApp;
   }
 
-  String get _sharePlayStoreUrl => 'https://play.google.com/store/apps/details?id=com.example.app';
+  String get _sharePlayStoreUrl => 'https://play.google.com/store/apps/details?id=com.neteru.n_pass';
 
   Future<void> share(ShareOptions options) async {
     try {
@@ -50,7 +50,7 @@ class Settings extends _$Settings {
           Uri emailLaunchUri = Uri(
             scheme: 'mailto',
             queryParameters: {
-              'subject': 'App',
+              'subject': t.appNameAlt,
               'body': '$_shareMessage\n$_sharePlayStoreUrl',
             },
           );
@@ -81,12 +81,6 @@ class Settings extends _$Settings {
       }
     }
   }
-
-  void toggleEnableNotificationsState(bool newState) {
-    prefs.setBool(PrefKeys.enableNotifications, newState);
-  }
-
-  bool? getEnableNotificationsState() => prefs.getBool(PrefKeys.enableNotifications, defaultValue: true);
 
   Future<void> changeLanguage(String newValue) async {
     final navigator = _navigationHelper.navigatorKey.currentState;

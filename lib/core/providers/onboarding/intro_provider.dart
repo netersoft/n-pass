@@ -22,10 +22,7 @@ class Intro extends _$Intro {
   void onDone() {
     locator<SharedPreferencesService>().setBool(PrefKeys.firstOpening, false);
 
-    _navigationHelper.pushReplacement(
-      const ProvidersRoute().location,
-      arguments: const AuthExtra(displayBackButton: false, displayPageFooter: true),
-    );
+    _navigationHelper.pushReplacement(const MainRoute().location);
   }
 }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter/core/helpers/router/navigation_helper.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:n_pass/core/helpers/router/navigation_helper.dart';
 
 void main() {
   group('NavigationHelper.getExtraValue', () {

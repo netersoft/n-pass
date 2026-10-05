@@ -1,4 +1,3 @@
 # CODEOWNERS — see .github/CONTRIBUTING.md for the PR/review process.
-# Single-team repo (mobile): no folder split needed.
 
-*    @edpage-hq/core-devs
+*    @noeGnh

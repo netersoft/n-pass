@@ -1,8 +1,5 @@
-import 'dart:async';
 import 'dart:convert';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
@@ -107,7 +104,6 @@ abstract class LogHelper {
         stackTrace: stackTrace,
         time: time,
       );
-      _recordToCrashlytics(message, error: error, stackTrace: stackTrace);
     }
   }
 
@@ -126,22 +122,6 @@ abstract class LogHelper {
         stackTrace: stackTrace,
         time: time,
       );
-      _recordToCrashlytics(message, error: error, stackTrace: stackTrace);
     }
-  }
-
-  /// Forwards to Crashlytics as a non-fatal error, as long as Firebase was
-  /// actually initialized (see CrashReportingService -- skipped entirely
-  /// when firebase_options.dart is still a placeholder).
-  static void _recordToCrashlytics(
-    dynamic message, {
-    Object? error,
-    StackTrace? stackTrace,
-  }) {
-    if (Firebase.apps.isEmpty) return;
-
-    unawaited(
-      FirebaseCrashlytics.instance.recordError(error ?? message, stackTrace),
-    );
   }
 }

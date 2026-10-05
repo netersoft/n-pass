@@ -18,7 +18,7 @@ Future<DateTime?> customDatePicker(BuildContext context) async {
         ? Theme(data: Theme.of(context).copyWith(), child: child!)
         : Theme(
             data: Theme.of(context).copyWith(
-              colorScheme: ColorScheme.dark(
+              colorScheme: const ColorScheme.dark(
                 primary: AppTheme.secondaryColor,
               ),
               textButtonTheme: TextButtonThemeData(

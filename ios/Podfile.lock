@@ -1,95 +1,22 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_image_compress_common (1.0.0):
-    - Flutter
-    - Mantle
-    - SDWebImage
-    - SDWebImageWebPCoder
-  - flutter_inappwebview_ios (0.0.1):
-    - Flutter
-    - flutter_inappwebview_ios/Core (= 0.0.1)
-    - OrderedSet (~> 6.0.3)
-  - flutter_inappwebview_ios/Core (0.0.1):
-    - Flutter
-    - OrderedSet (~> 6.0.3)
   - flutter_keyboard_visibility (0.0.1):
-    - Flutter
-  - libwebp (1.5.0):
-    - libwebp/demux (= 1.5.0)
-    - libwebp/mux (= 1.5.0)
-    - libwebp/sharpyuv (= 1.5.0)
-    - libwebp/webp (= 1.5.0)
-  - libwebp/demux (1.5.0):
-    - libwebp/webp
-  - libwebp/mux (1.5.0):
-    - libwebp/demux
-  - libwebp/sharpyuv (1.5.0)
-  - libwebp/webp (1.5.0):
-    - libwebp/sharpyuv
-  - location (0.0.1):
-    - Flutter
-  - Mantle (2.2.0):
-    - Mantle/extobjc (= 2.2.0)
-  - Mantle/extobjc (2.2.0)
-  - OrderedSet (6.0.3)
-  - permission_handler_apple (9.3.0):
-    - Flutter
-  - SDWebImage (5.21.7):
-    - SDWebImage/Core (= 5.21.7)
-  - SDWebImage/Core (5.21.7)
-  - SDWebImageWebPCoder (0.15.0):
-    - libwebp (~> 1.0)
-    - SDWebImage/Core (~> 5.17)
-  - video_compress (0.3.0):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - flutter_image_compress_common (from `.symlinks/plugins/flutter_image_compress_common/ios`)
-  - flutter_inappwebview_ios (from `.symlinks/plugins/flutter_inappwebview_ios/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
-  - location (from `.symlinks/plugins/location/ios`)
-  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
-  - video_compress (from `.symlinks/plugins/video_compress/ios`)
-
-SPEC REPOS:
-  trunk:
-    - libwebp
-    - Mantle
-    - OrderedSet
-    - SDWebImage
-    - SDWebImageWebPCoder
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  flutter_image_compress_common:
-    :path: ".symlinks/plugins/flutter_image_compress_common/ios"
-  flutter_inappwebview_ios:
-    :path: ".symlinks/plugins/flutter_inappwebview_ios/ios"
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
-  location:
-    :path: ".symlinks/plugins/location/ios"
-  permission_handler_apple:
-    :path: ".symlinks/plugins/permission_handler_apple/ios"
-  video_compress:
-    :path: ".symlinks/plugins/video_compress/ios"
 
 SPEC CHECKSUMS:
-  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  flutter_image_compress_common: 1697a328fd72bfb335507c6bca1a65fa5ad87df1
-  flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
+  Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
   flutter_keyboard_visibility: 4625131e43015dbbe759d9b20daaf77e0e3f6619
-  libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
-  location: 155caecf9da4f280ab5fe4a55f94ceccfab838f8
-  Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
-  OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
-  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
-  SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
-  SDWebImageWebPCoder: 0e06e365080397465cc73a7a9b472d8a3bd0f377
-  video_compress: f2133a07762889d67f0711ac831faa26f956980e
 
-PODFILE CHECKSUM: 2f065936a40c398d4768c31fd3c2e45eefdad804
+PODFILE CHECKSUM: fb3b4c9c4ee95f96a930014c58bd96aa13921b89
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.17.0

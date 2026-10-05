@@ -17,7 +17,6 @@ class HiveService {
     return _instance;
   }
 
-  Box? authBox;
   Box? helperBox;
 
   HiveService();
@@ -39,10 +38,6 @@ class HiveService {
     final key = await secureStorage.read(key: 'key');
     final encryptionKeyUint8List = base64Url.decode(key!);
 
-    authBox = await Hive.openBox(
-      HiveKeys.auth,
-      encryptionCipher: HiveAesCipher(encryptionKeyUint8List),
-    );
     helperBox = await Hive.openBox(
       HiveKeys.helper,
       encryptionCipher: HiveAesCipher(encryptionKeyUint8List),

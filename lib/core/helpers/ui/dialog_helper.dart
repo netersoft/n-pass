@@ -41,7 +41,7 @@ abstract class DialogHelper {
           TextButton(
             child: Text(
               context.t.ok,
-              style: TextStyle(color: AppTheme.primaryColor, fontSize: 16.0),
+              style: const TextStyle(color: AppTheme.primaryColor, fontSize: 16.0),
             ),
             onPressed: () {
               context.pop();
@@ -69,7 +69,7 @@ abstract class DialogHelper {
               TextButton(
                 child: Text(
                   context.t.ok,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppTheme.primaryColor,
                     fontSize: 16.0,
                   ),

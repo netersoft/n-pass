@@ -1,23 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="com.example.flutter_project_template">
-    <!-- Required to fetch data from the internet. -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <!-- Required to show notifications on Android 13+ (API 33), including FCM push notifications. -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <queries>
-        <!-- If your app checks for SMS support -->
-        <intent>
-            <action android:name="android.intent.action.VIEW"/>
-            <data android:scheme="sms"/>
-        </intent>
-        <!-- If your app checks for call support -->
-        <intent>
-            <action android:name="android.intent.action.VIEW"/>
-            <data android:scheme="tel"/>
-        </intent>
-    </queries>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.neteru.n_pass">
     <application android:label="@string/app_name" android:name="${applicationName}" android:icon="@mipmap/ic_launcher"
-		android:roundIcon="@mipmap/ic_launcher_rounded" android:enableOnBackInvokedCallback="true" tools:ignore="MissingClass">
+		android:roundIcon="@mipmap/ic_launcher_rounded" android:enableOnBackInvokedCallback="true">
         <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
@@ -29,21 +12,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Ucrop.CropTheme"/>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data android:name="flutterEmbedding" android:value="2"/>
-        <!-- Prompt Google Play services to install the backported photo picker module -->
-        <service android:name="com.google.android.gms.metadata.ModuleDependencies" android:enabled="false" android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES" />
-            </intent-filter>
-
-            <meta-data android:name="photopicker_activity:0:required" android:value="" />
-        </service>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility?hl=en and

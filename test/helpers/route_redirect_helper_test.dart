@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter/core/helpers/router/route_redirect_helper.dart';
-import 'package:flutter_starter/core/routes/app_route.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:n_pass/core/helpers/router/route_redirect_helper.dart';
+import 'package:n_pass/core/routes/app_route.dart';
 
 void main() {
   group('RedirectionRoute', () {
