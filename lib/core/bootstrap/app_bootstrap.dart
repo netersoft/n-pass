@@ -5,7 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
 import '../services/di/locator.dart';
-import '../services/i18n/translations.g.dart';
+import '../services/i18n/locale_preference.dart';
+import '../services/shared_preferences/service.dart';
 
 class AppBootstrapConfig {
   final bool preserveNativeSplash;
@@ -32,7 +33,7 @@ Future<void> bootstrapApp({
 
   await setupLocator();
 
-  await LocaleSettings.useDeviceLocale();
+  await LocalePreference.restore(locator<SharedPreferencesService>());
 
   LicenseRegistry.addLicense(_bundledContentLicenses);
 }

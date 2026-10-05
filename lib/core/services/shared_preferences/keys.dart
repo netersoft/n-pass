@@ -7,4 +7,5 @@ abstract class PrefKeys {
   static const generatorOptions = 'generatorOptions';
   static const revealPasswords = 'revealPasswords';
   static const lastBackupAt = 'lastBackupAt';
+  static const language = 'appLanguage';
 }

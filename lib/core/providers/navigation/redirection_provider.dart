@@ -8,6 +8,7 @@ import '../../enums/app_brightness.dart';
 import '../../helpers/router/navigation_helper.dart';
 import '../../routes/app_route.dart';
 import '../../services/di/locator.dart';
+import '../../services/i18n/locale_preference.dart';
 import '../../services/i18n/translations.g.dart';
 import '../../services/shared_preferences/keys.dart';
 import '../../services/shared_preferences/service.dart';
@@ -34,7 +35,7 @@ class Redirection extends _$Redirection {
       unawaited(prefs.setString(PrefKeys.brightness, AppBrightness.system.name));
 
       var ctx = _navigationHelper.navigatorKey.currentContext;
-      if (ctx != null) {
+      if (ctx != null && !LocalePreference.hasSaved(prefs)) {
         final langCode = Localizations.localeOf(ctx).languageCode;
         await LocaleSettings.setLocaleRaw(langCode);
       }

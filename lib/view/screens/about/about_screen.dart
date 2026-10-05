@@ -60,7 +60,6 @@ class AboutScreen extends StatelessWidget {
                 applicationName: context.t.appName,
                 applicationVersion: version,
                 applicationIcon: Padding(padding: const EdgeInsets.all(12), child: Image.asset(_logo, width: 64, height: 64)),
-                applicationLegalese: '© 2018-${DateTime.now().year} Netersoft',
               ),
             ),
             ListTile(
@@ -69,12 +68,6 @@ class AboutScreen extends StatelessWidget {
               subtitle: Text(context.t.effWordlistCredit),
             ),
             const Divider(height: 1),
-            const SizedBox(height: 24),
-            Text(
-              '© 2018-${DateTime.now().year} Netersoft',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
-            ),
           ],
         );
       },
