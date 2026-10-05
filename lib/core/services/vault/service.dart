@@ -112,6 +112,13 @@ class VaultService {
 
   Future<void> saveEntries(Iterable<VaultEntry> entries) async => _store.putEntries({for (final entry in entries) entry.id: await _encryptEntry(entry)});
 
+  /// Replaces the whole vault content with [entries]. They are all encrypted
+  /// before anything is erased.
+  Future<void> replaceEntries(Iterable<VaultEntry> entries) async {
+    final blobs = {for (final entry in entries) entry.id: await _encryptEntry(entry)};
+    await _store.replaceEntries(blobs);
+  }
+
   Future<void> deleteEntry(String id) {
     _requireKey();
     return _store.deleteEntry(id);

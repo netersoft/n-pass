@@ -8,7 +8,10 @@ import '../../../core/helpers/ui/dialog_helper.dart';
 import '../../../core/models/vault_entry.dart';
 import '../../../core/providers/vault/entries_provider.dart';
 import '../../../core/routes/app_route.dart';
+import '../../../core/services/di/locator.dart';
 import '../../../core/services/i18n/translations.g.dart';
+import '../../../core/services/shared_preferences/keys.dart';
+import '../../../core/services/shared_preferences/service.dart';
 import '../../../core/tools/functions/password_strength.dart';
 import '../../components/vault/copy_feedback.dart';
 import '../../components/vault/entry_avatar.dart';
@@ -154,7 +157,7 @@ class _PasswordTile extends StatefulWidget {
 }
 
 class _PasswordTileState extends State<_PasswordTile> {
-  bool _visible = false;
+  bool _visible = locator<SharedPreferencesService>().getBool(PrefKeys.revealPasswords, defaultValue: false) ?? false;
 
   @override
   Widget build(BuildContext context) => ListTile(

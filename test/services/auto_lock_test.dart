@@ -65,4 +65,48 @@ void main() {
 
     verify(() => prefs.setInt(PrefKeys.autoLockDelaySeconds, 600)).called(1);
   });
+
+  group('whileExternal', () {
+    test('gives at least the grace delay while a system screen is open', () async {
+      delay(0);
+
+      await autoLock.whileExternal(() async {
+        autoLock.onBackground();
+        now = now.add(const Duration(seconds: AutoLockService.externalGraceSeconds - 1));
+        expect(autoLock.onForeground(), isFalse);
+
+        autoLock.onBackground();
+        now = now.add(const Duration(seconds: AutoLockService.externalGraceSeconds));
+        expect(autoLock.onForeground(), isTrue, reason: 'still locks after a long trip away');
+      });
+    });
+
+    test('keeps a longer configured delay', () async {
+      delay(3600);
+
+      await autoLock.whileExternal(() async {
+        autoLock.onBackground();
+        now = now.add(const Duration(seconds: 600));
+        expect(autoLock.onForeground(), isFalse);
+      });
+    });
+
+    test('applies the normal delay again once the action is done', () async {
+      delay(0);
+
+      await autoLock.whileExternal(() async {});
+      autoLock.onBackground();
+
+      expect(autoLock.onForeground(), isTrue);
+    });
+
+    test('ends the grace even when the action throws', () async {
+      delay(0);
+
+      await expectLater(autoLock.whileExternal<void>(() async => throw StateError('boom')), throwsStateError);
+      autoLock.onBackground();
+
+      expect(autoLock.onForeground(), isTrue);
+    });
+  });
 }

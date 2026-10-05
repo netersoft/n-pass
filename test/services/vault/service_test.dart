@@ -163,4 +163,14 @@ void main() {
     expect(ids.toSet(), hasLength(100));
     expect(ids.every(RegExp(r'^[0-9a-f]{32}$').hasMatch), isTrue);
   });
+
+  test('replaceEntries swaps the whole content', () async {
+    await vault.create('master');
+    await vault.saveEntries([entry('Old 1'), entry('Old 2')]);
+
+    final replacement = [entry('New')];
+    await vault.replaceEntries(replacement);
+
+    expect((await vault.readEntries()).map((e) => e.title), ['New']);
+  });
 }

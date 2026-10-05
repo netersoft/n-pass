@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../models/vault_entry.dart';
+import '../../services/backup/service.dart';
 import '../../services/di/locator.dart';
 import '../../services/shared_preferences/keys.dart';
 import '../../services/shared_preferences/service.dart';
@@ -34,6 +35,23 @@ class Entries extends _$Entries {
   Future<void> delete(String id) async {
     await _vault.deleteEntry(id);
     state = AsyncData((state.value ?? const []).where((e) => e.id != id).toList());
+  }
+
+  /// Writes entries restored from a backup and returns what changed.
+  Future<ImportPlan> import(List<VaultEntry> imported, ImportMode mode) async {
+    final current = await future;
+    switch (mode) {
+      case ImportMode.replace:
+        await _vault.replaceEntries(imported);
+        state = AsyncData(List.of(imported));
+        return ImportPlan(toSave: imported, added: imported.length, updated: 0, unchanged: 0);
+      case ImportMode.merge:
+        final plan = planMergeImport(current, imported);
+        await _vault.saveEntries(plan.toSave);
+        final saved = {for (final entry in plan.toSave) entry.id};
+        state = AsyncData([...current.where((e) => !saved.contains(e.id)), ...plan.toSave]);
+        return plan;
+    }
   }
 }
 
