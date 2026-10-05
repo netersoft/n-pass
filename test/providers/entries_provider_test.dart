@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:n_pass/core/models/vault_entry.dart';
 import 'package:n_pass/core/providers/vault/entries_provider.dart';
+import 'package:n_pass/core/services/backup/service.dart';
 import 'package:n_pass/core/services/shared_preferences/keys.dart';
 import 'package:n_pass/core/tools/functions/entry_functions.dart';
 
@@ -16,7 +17,10 @@ void main() {
   late MockSharedPreferencesService prefs;
   late ValueNotifier<bool> unlocked;
 
-  setUpAll(() => registerFallbackValue(entry('x', 'x')));
+  setUpAll(() {
+    registerFallbackValue(entry('x', 'x'));
+    registerFallbackValue(<VaultEntry>[]);
+  });
 
   setUp(() async {
     vault = MockVaultService();
@@ -28,6 +32,8 @@ void main() {
     when(() => vault.readEntries()).thenAnswer((_) async => [entry('1', 'Mail'), entry('2', 'Bank')]);
     when(() => vault.saveEntry(any())).thenAnswer((_) async {});
     when(() => vault.deleteEntry(any())).thenAnswer((_) async {});
+    when(() => vault.saveEntries(any())).thenAnswer((_) async {});
+    when(() => vault.replaceEntries(any())).thenAnswer((_) async {});
     when(() => prefs.getString(any(), defaultValue: any(named: 'defaultValue'))).thenReturn(null);
     when(() => prefs.setString(any(), any())).thenAnswer((_) async => true);
   });
@@ -83,5 +89,28 @@ void main() {
 
     c.read(entriesFilterProvider.notifier).setSort(EntrySort.recent);
     verify(() => prefs.setString(PrefKeys.entrySort, 'recent')).called(1);
+  });
+
+  test('a merge import writes only new or more recent entries', () async {
+    final c = container();
+    await c.read(entriesProvider.future);
+    final newer = entry('1', 'Gmail').copyWith(updatedAt: DateTime.utc(2027));
+
+    final plan = await c.read(entriesProvider.notifier).import([newer, entry('2', 'Bank'), entry('3', 'Netflix')], ImportMode.merge);
+
+    expect((plan.added, plan.updated, plan.unchanged), (1, 1, 1));
+    final saved = verify(() => vault.saveEntries(captureAny())).captured.single as Iterable<VaultEntry>;
+    expect(saved.map((e) => e.id), ['1', '3']);
+    expect(c.read(entriesProvider).value!.map((e) => e.title), unorderedEquals(['Gmail', 'Bank', 'Netflix']));
+  });
+
+  test('a replace import swaps every entry', () async {
+    final c = container();
+    await c.read(entriesProvider.future);
+
+    await c.read(entriesProvider.notifier).import([entry('9', 'Only')], ImportMode.replace);
+
+    verify(() => vault.replaceEntries(any())).called(1);
+    expect(c.read(entriesProvider).value!.map((e) => e.title), ['Only']);
   });
 }

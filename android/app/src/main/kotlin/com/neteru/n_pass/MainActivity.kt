@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.PersistableBundle
 import android.view.WindowManager
+import androidx.activity.result.contract.ActivityResultContracts
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -18,6 +19,22 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterFragmentActivity() {
     private val clipHandler = Handler(Looper.getMainLooper())
     private var clipGeneration = 0
+
+    private var pendingSave: Pair<ByteArray, MethodChannel.Result>? = null
+    private val createDocument = registerForActivityResult(ActivityResultContracts.CreateDocument(BACKUP_MIME_TYPE)) { uri ->
+        val (bytes, result) = pendingSave ?: return@registerForActivityResult
+        pendingSave = null
+        if (uri == null) {
+            result.success(false)
+            return@registerForActivityResult
+        }
+        try {
+            contentResolver.openOutputStream(uri, "wt")!!.use { it.write(bytes) }
+            result.success(true)
+        } catch (e: Exception) {
+            result.error("write_failed", e.message, null)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +54,18 @@ class MainActivity : FlutterFragmentActivity() {
                 "copySensitive" -> {
                     copySensitive(call.argument<String>("text")!!, call.argument<Int>("clearAfterMs")!!.toLong())
                     result.success(null)
+                }
+                else -> result.notImplemented()
+            }
+        }
+        // Saves a file where the user picks through the system document picker
+        // (Storage Access Framework): no storage permission needed.
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "npass/files").setMethodCallHandler { call, result ->
+            when (call.method) {
+                "saveFile" -> {
+                    pendingSave?.second?.success(false)
+                    pendingSave = call.argument<ByteArray>("bytes")!! to result
+                    createDocument.launch(call.argument<String>("name")!!)
                 }
                 else -> result.notImplemented()
             }
@@ -70,6 +99,7 @@ class MainActivity : FlutterFragmentActivity() {
 
     private companion object {
         const val CLIP_LABEL = "NPass"
+        const val BACKUP_MIME_TYPE = "application/octet-stream"
         // ClipDescription.EXTRA_IS_SENSITIVE (API 33), honored by older
         // Android 13 builds too when set by name.
         const val EXTRA_IS_SENSITIVE = "android.content.extra.IS_SENSITIVE"

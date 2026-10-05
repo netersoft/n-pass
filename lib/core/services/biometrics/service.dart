@@ -43,7 +43,7 @@ class BiometricService {
 
   final SharedPreferencesService _prefs;
   final LocalAuthentication _localAuth;
-  final FlutterSecureStorage Function(BiometricPrompt prompt) _storageFor;
+  final FlutterSecureStorage Function(BiometricPrompt prompt, {required bool resetOnError}) _storageFor;
 
   /// flutter_secure_storage 11.2.0 caches the unlocked cipher after the first
   /// write to a new biometric store (its non-biometric to biometric migration
@@ -55,14 +55,17 @@ class BiometricService {
   BiometricService(
     this._prefs, {
     LocalAuthentication? localAuth,
-    FlutterSecureStorage Function(BiometricPrompt prompt)? storageFor,
+    FlutterSecureStorage Function(BiometricPrompt prompt, {required bool resetOnError})? storageFor,
   }) : _localAuth = localAuth ?? LocalAuthentication(),
        _storageFor = storageFor ?? _defaultStorage;
 
-  static FlutterSecureStorage _defaultStorage(BiometricPrompt prompt) => FlutterSecureStorage(
+  /// Reads use `resetOnError: false`, so a cancelled prompt never wipes the
+  /// stored key. Writes and deletes use `true`: it is the only way to get rid
+  /// of a Keystore key invalidated by a biometric enrollment change, since the
+  /// plugin fails to initialize the store before any delete otherwise.
+  static FlutterSecureStorage _defaultStorage(BiometricPrompt prompt, {required bool resetOnError}) => FlutterSecureStorage(
     aOptions: AndroidOptions.biometric(
-      // A cancelled prompt must not wipe the stored key.
-      resetOnError: false,
+      resetOnError: resetOnError,
       enforceBiometrics: true,
       requireBiometricsPerOperation: true,
       biometricType: AndroidBiometricType.strongBiometricOnly,
@@ -94,7 +97,7 @@ class BiometricService {
   /// the prompt or the keystore refuses the key.
   Future<bool> enable(Uint8List vaultKey, BiometricPrompt prompt) async {
     try {
-      await _storageFor(prompt).write(key: _storageKey, value: base64Encode(vaultKey));
+      await _storageFor(prompt, resetOnError: true).write(key: _storageKey, value: base64Encode(vaultKey));
       await _prefs.setBool(PrefKeys.biometricsEnabled, true);
       _promptCachedThisSession = true;
       return true;
@@ -110,11 +113,14 @@ class BiometricService {
         final authenticated = await _localAuth.authenticate(localizedReason: prompt.title, biometricOnly: true);
         if (!authenticated) return const BiometricReadResult.cancelled();
       }
-      final value = await _storageFor(prompt).read(key: _storageKey);
+      final value = await _storageFor(prompt, resetOnError: false).read(key: _storageKey);
       if (value == null) return const BiometricReadResult.unavailable();
       return BiometricReadResult.success(base64Decode(value));
+    } on PlatformException catch (e) {
+      LogHelper.w('Biometric unlock failed', error: e);
+      return _isKeyInvalidated(e) ? const BiometricReadResult.unavailable() : const BiometricReadResult.cancelled();
     } on Exception catch (e) {
-      // PlatformException from the keystore, LocalAuthException from local_auth.
+      // LocalAuthException from local_auth.
       LogHelper.w('Biometric unlock failed', error: e);
       return const BiometricReadResult.cancelled();
     }
@@ -123,9 +129,13 @@ class BiometricService {
   Future<void> disable(BiometricPrompt prompt) async {
     await _prefs.setBool(PrefKeys.biometricsEnabled, false);
     try {
-      await _storageFor(prompt).delete(key: _storageKey);
+      await _storageFor(prompt, resetOnError: true).delete(key: _storageKey);
     } on PlatformException catch (e) {
       LogHelper.w('Deleting the biometric key failed', error: e);
     }
   }
+
+  /// Android: the Keystore key was invalidated because enrolled biometrics
+  /// changed. The plugin only reports it inside a generic error.
+  static bool _isKeyInvalidated(PlatformException e) => '${e.message} ${e.details}'.contains('KeyPermanentlyInvalidatedException');
 }

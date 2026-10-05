@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../view/redirection.dart';
+import '../../view/screens/account/backup_screen.dart';
+import '../../view/screens/account/change_password_screen.dart';
 import '../../view/screens/account/settings_screen.dart';
 import '../../view/screens/entries/entry_detail_screen.dart';
 import '../../view/screens/entries/entry_form_screen.dart';
@@ -60,7 +62,13 @@ class UnlockRoute extends GoRouteData with $UnlockRoute {
 @TypedGoRoute<MainRoute>(
   path: '/main',
   routes: [
-    TypedGoRoute<SettingsRoute>(path: 'settings'),
+    TypedGoRoute<SettingsRoute>(
+      path: 'settings',
+      routes: [
+        TypedGoRoute<ChangePasswordRoute>(path: 'password'),
+        TypedGoRoute<BackupRoute>(path: 'backup'),
+      ],
+    ),
     TypedGoRoute<NewEntryRoute>(path: 'entries/new'),
     TypedGoRoute<EntryRoute>(
       path: 'entries/:id',
@@ -80,6 +88,20 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) => SwipeablePage<void>(builder: (context) => const SettingsScreen());
+}
+
+class ChangePasswordRoute extends GoRouteData with $ChangePasswordRoute {
+  const ChangePasswordRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) => SwipeablePage<void>(builder: (context) => const ChangePasswordScreen());
+}
+
+class BackupRoute extends GoRouteData with $BackupRoute {
+  const BackupRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) => SwipeablePage<void>(builder: (context) => const BackupScreen());
 }
 
 class NewEntryRoute extends GoRouteData with $NewEntryRoute {

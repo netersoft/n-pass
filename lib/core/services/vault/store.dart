@@ -71,6 +71,12 @@ class VaultStore {
 
   Future<void> deleteEntry(String id) => _entries.delete(id);
 
+  /// Replaces every entry with [blobs].
+  Future<void> replaceEntries(Map<String, Uint8List> blobs) async {
+    await _entries.clear();
+    await _entries.putAll(blobs);
+  }
+
   /// Erases the whole vault, header included.
   Future<void> clear() async {
     await _entries.clear();

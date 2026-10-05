@@ -22,12 +22,21 @@ void main() {
   late MockLocalAuthentication localAuth;
   late MockFlutterSecureStorage storage;
   late BiometricService biometrics;
+  late List<bool> resetFlags;
 
   setUp(() {
     prefs = MockSharedPreferencesService();
     localAuth = MockLocalAuthentication();
     storage = MockFlutterSecureStorage();
-    biometrics = BiometricService(prefs, localAuth: localAuth, storageFor: (_) => storage);
+    resetFlags = [];
+    biometrics = BiometricService(
+      prefs,
+      localAuth: localAuth,
+      storageFor: (_, {required resetOnError}) {
+        resetFlags.add(resetOnError);
+        return storage;
+      },
+    );
     when(() => prefs.setBool(any(), any())).thenAnswer((_) async => true);
   });
 
@@ -68,6 +77,7 @@ void main() {
 
       expect(await biometrics.enable(key, prompt), isTrue);
       verify(() => storage.write(key: 'vault_key', value: base64Encode(key))).called(1);
+      expect(resetFlags, [true], reason: 'replaces an invalidated Keystore key');
       verify(() => prefs.setBool(PrefKeys.biometricsEnabled, true)).called(1);
     });
 
@@ -97,6 +107,26 @@ void main() {
       when(() => storage.read(key: 'vault_key')).thenThrow(PlatformException(code: 'cancel'));
 
       expect((await biometrics.readKey(prompt)).status, BiometricReadStatus.cancelled);
+    });
+
+    test('reports a key invalidated by an enrollment change as unavailable', () async {
+      when(() => storage.read(key: 'vault_key')).thenThrow(
+        PlatformException(
+          code: 'Exception encountered',
+          message: 'Migration failed after algorithm change',
+          details: 'Caused by: android.security.keystore.KeyPermanentlyInvalidatedException: Key permanently invalidated',
+        ),
+      );
+
+      expect((await biometrics.readKey(prompt)).status, BiometricReadStatus.unavailable);
+    });
+
+    test('never lets a read reset the store', () async {
+      when(() => storage.read(key: 'vault_key')).thenThrow(PlatformException(code: 'cancel'));
+
+      await biometrics.readKey(prompt);
+
+      expect(resetFlags, [false]);
     });
 
     test('reports a missing key as unavailable', () async {
@@ -136,5 +166,6 @@ void main() {
 
     verify(() => prefs.setBool(PrefKeys.biometricsEnabled, false)).called(1);
     verify(() => storage.delete(key: 'vault_key')).called(1);
+    expect(resetFlags, [true]);
   });
 }
