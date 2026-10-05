@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../models/vault_entry.dart';
 import 'crypto.dart';
@@ -23,11 +23,20 @@ class VaultService {
 
   SecretKeyData? _key;
 
+  /// Notifies when the vault gets locked or unlocked (router refresh).
+  final ValueNotifier<bool> unlockedListenable = ValueNotifier(false);
+
   VaultService(this._store, {KdfParams Function()? newKdfParams}) : _newKdfParams = newKdfParams ?? KdfParams.generate;
 
   bool get isCreated => _store.readHeader() != null;
 
   bool get isUnlocked => _key != null;
+
+  void _setKey(SecretKeyData? key) {
+    _key?.destroy();
+    _key = key;
+    unlockedListenable.value = key != null;
+  }
 
   /// Creates a new, empty vault protected by [password] and leaves it unlocked.
   Future<void> create(String password) async {
@@ -36,7 +45,7 @@ class VaultService {
     final key = VaultCrypto.generateKey();
     final keyCheck = await VaultCrypto.encrypt(const [], key, aad: _checkAad);
     await _store.writeHeader(await _wrapKey(key, password, keyCheck));
-    _key = key;
+    _setKey(key);
   }
 
   /// Returns false when [password] is wrong.
@@ -44,8 +53,9 @@ class VaultService {
     final header = _requireHeader();
     try {
       final kek = await VaultCrypto.deriveKey(password, header.kdf);
-      _key = SecretKeyData(await VaultCrypto.decrypt(header.wrappedKey, kek, aad: _keyAad));
+      final key = SecretKeyData(await VaultCrypto.decrypt(header.wrappedKey, kek, aad: _keyAad));
       kek.destroy();
+      _setKey(key);
       return true;
     } on VaultAuthException {
       return false;
@@ -65,14 +75,11 @@ class VaultService {
     } on VaultAuthException {
       return false;
     }
-    _key = candidate;
+    _setKey(candidate);
     return true;
   }
 
-  void lock() {
-    _key?.destroy();
-    _key = null;
-  }
+  void lock() => _setKey(null);
 
   /// Re-encrypts the vault key under [newPassword], with fresh Argon2id
   /// parameters. Returns false when [currentPassword] is wrong.

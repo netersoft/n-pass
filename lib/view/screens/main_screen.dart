@@ -8,6 +8,7 @@ import '../../core/providers/main_provider.dart';
 import '../../core/routes/app_route.dart';
 import '../../core/services/di/locator.dart';
 import '../../core/services/i18n/translations.g.dart';
+import '../../core/services/vault/service.dart';
 import '../components/misc/status.dart';
 import '../themes/app_theme.dart';
 
@@ -28,6 +29,11 @@ class MainScreen extends StatelessWidget {
       ],
     ),
     actions: [
+      IconButton(
+        tooltip: t.lock,
+        onPressed: () => locator<VaultService>().lock(),
+        icon: const Icon(Icons.lock_outline, color: Colors.white),
+      ),
       IconButton(
         onPressed: () {
           locator<NavigationHelper>().push(const SettingsRoute().location);

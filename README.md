@@ -84,6 +84,13 @@ Implemented in `lib/core/services/vault/` with [`cryptography`](https://pub.dev/
 - The master password is never stored, and a forgotten master password can't be recovered.
 - Entries live in the Hive box `vault_entries` as opaque blobs. The header lives in `vault_meta`.
 
+Around the vault:
+
+- **Biometric unlock** (optional, `lib/core/services/biometrics/`): a copy of the vault key is stored with `flutter_secure_storage` behind strong biometrics. On Android it sits in a Keystore key that requires user authentication for each read. On iOS it is a Keychain item bound to the currently enrolled biometric set. If enrolled biometrics change, the key is invalidated: the app falls back to the master password and turns biometrics off.
+- **Workaround for flutter_secure_storage 11.2.0:** the first write to a new biometric store caches the unlocked cipher (`FlutterSecureStorage.java:659`). Until the app restarts, later reads skip the prompt despite `requireBiometricsPerOperation`. In that session, an explicit `local_auth` prompt guards the read.
+- **Auto-lock** (`lib/core/services/auto_lock/`): the vault locks when the app comes back after a configurable delay in the background (default 1 minute; 0 locks as soon as the app leaves the foreground). The lock button in the app bar locks it immediately. Once locked, the router keeps every screen except intro, create and unlock out of reach.
+- **Screen protection:** release builds set `FLAG_SECURE` on Android, which blocks screenshots, screen recording and the recent-apps thumbnail. Debug builds leave it off so the UI can be checked with screenshots. On both platforms, a cover hides the unlocked vault while the app is inactive or in the background.
+
 ## Quality
 
 ```bash

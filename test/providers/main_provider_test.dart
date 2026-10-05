@@ -63,7 +63,7 @@ void main() {
         expect(appBar.actions, hasLength(2));
       });
 
-      test('returns the default app bar (1 action) on every other tab', () {
+      test('returns the default app bar (lock + settings actions) on every other tab', () {
         final container = ProviderContainer();
         addTearDown(container.dispose);
 
@@ -71,7 +71,7 @@ void main() {
           container.read(mainProvider.notifier).updateTabIndex(index);
 
           final appBar = container.read(mainProvider.notifier).selectAppBar() as AppBar;
-          expect(appBar.actions, hasLength(1));
+          expect(appBar.actions, hasLength(2));
         }
       });
     });

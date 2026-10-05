@@ -11,6 +11,7 @@ import '../../services/di/locator.dart';
 import '../../services/i18n/translations.g.dart';
 import '../../services/shared_preferences/keys.dart';
 import '../../services/shared_preferences/service.dart';
+import '../../services/vault/service.dart';
 
 part 'redirection_provider.g.dart';
 
@@ -38,8 +39,10 @@ class Redirection extends _$Redirection {
         await LocaleSettings.setLocaleRaw(langCode);
       }
       _navigationHelper.pushReplacement(const IntroRoute().location);
+    } else if (!locator<VaultService>().isCreated) {
+      _navigationHelper.pushReplacement(const CreateVaultRoute().location);
     } else {
-      _navigationHelper.pushReplacement(const MainRoute().location);
+      _navigationHelper.pushReplacement(const UnlockRoute().location);
     }
   }
 }

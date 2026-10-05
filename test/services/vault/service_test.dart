@@ -145,6 +145,18 @@ void main() {
     expect(store.readEntries(), isEmpty);
   });
 
+  test('unlockedListenable follows the lock state', () async {
+    final states = <bool>[];
+    vault.unlockedListenable.addListener(() => states.add(vault.unlockedListenable.value));
+
+    await vault.create('master');
+    vault.lock();
+    await vault.unlock('master');
+    await vault.destroy();
+
+    expect(states, [true, false, true, false]);
+  });
+
   test('newEntryId returns distinct 32-char hex ids', () {
     final ids = List.generate(100, (_) => VaultService.newEntryId());
 
