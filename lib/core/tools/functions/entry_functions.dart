@@ -4,22 +4,47 @@ import '../../models/vault_entry.dart';
 
 enum EntrySort { title, recent }
 
-/// Case- and accent-insensitive search on title, username, email and URL,
-/// then sort.
-List<VaultEntry> filterAndSortEntries(List<VaultEntry> entries, {String query = '', EntrySort sort = EntrySort.title}) {
+/// Case- and accent-insensitive search on title, username, email, URL and
+/// category, optionally limited to favorites or to one [category], then
+/// sorted with favorites first.
+List<VaultEntry> filterAndSortEntries(
+  List<VaultEntry> entries, {
+  String query = '',
+  EntrySort sort = EntrySort.title,
+  bool favoritesOnly = false,
+  String? category,
+}) {
   final needle = normalizeForSearch(query.trim());
-  final matches = needle.isEmpty
-      ? [...entries]
-      : entries.where((e) => [e.title, e.username, e.email, e.url].any((field) => normalizeForSearch(field).contains(needle))).toList();
+  final categoryKey = category == null ? null : normalizeForSearch(category.trim());
+  final matches = entries.where((e) {
+    if (favoritesOnly && !e.favorite) return false;
+    if (categoryKey != null && normalizeForSearch(e.category.trim()) != categoryKey) return false;
+    if (needle.isEmpty) return true;
+    return [e.title, e.username, e.email, e.url, e.category].any((field) => normalizeForSearch(field).contains(needle));
+  }).toList();
 
-  switch (sort) {
-    case EntrySort.title:
-      matches.sort((a, b) => compareAsciiLowerCaseNatural(normalizeForSearch(a.title), normalizeForSearch(b.title)));
-    case EntrySort.recent:
-      matches.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-  }
+  int byOrder(VaultEntry a, VaultEntry b) => switch (sort) {
+    EntrySort.title => compareAsciiLowerCaseNatural(normalizeForSearch(a.title), normalizeForSearch(b.title)),
+    EntrySort.recent => b.updatedAt.compareTo(a.updatedAt),
+  };
+  matches.sort((a, b) => a.favorite == b.favorite ? byOrder(a, b) : (a.favorite ? -1 : 1));
   return matches;
 }
+
+/// Categories in use, sorted, merging spellings that differ only by case or
+/// accents (the first spelling met wins).
+List<String> entryCategoriesOf(List<VaultEntry> entries) {
+  final byKey = <String, String>{};
+  for (final entry in entries) {
+    final category = entry.category.trim();
+    if (category.isNotEmpty) byKey.putIfAbsent(normalizeForSearch(category), () => category);
+  }
+  return byKey.entries.sortedByCompare((e) => e.key, compareAsciiLowerCaseNatural).map((e) => e.value).toList();
+}
+
+/// Other entries using [password] (exact match), excluding [exceptId].
+List<VaultEntry> entriesSharingPassword(List<VaultEntry> entries, String password, {String? exceptId}) =>
+    password.isEmpty ? const [] : entries.where((e) => e.id != exceptId && e.password == password).toList();
 
 const _accents = {
   'à': 'a', 'â': 'a', 'ä': 'a', 'á': 'a', 'ã': 'a', 'å': 'a', //

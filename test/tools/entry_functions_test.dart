@@ -2,12 +2,24 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:n_pass/core/models/vault_entry.dart';
 import 'package:n_pass/core/tools/functions/entry_functions.dart';
 
-VaultEntry entry(String title, {String username = '', String email = '', String url = '', int day = 1}) => VaultEntry(
+VaultEntry entry(
+  String title, {
+  String username = '',
+  String email = '',
+  String url = '',
+  String category = '',
+  String password = '',
+  bool favorite = false,
+  int day = 1,
+}) => VaultEntry(
   id: title,
   title: title,
   username: username,
   email: email,
   url: url,
+  category: category,
+  password: password,
+  favorite: favorite,
   createdAt: DateTime.utc(2026),
   updatedAt: DateTime.utc(2026, 1, day),
 );
@@ -50,5 +62,40 @@ void main() {
     expect(entryInitials('  la banque postale '), 'LP');
     expect(entryInitials('é'), 'É');
     expect(entryInitials('   '), '?');
+  });
+
+  group('favorites and categories', () {
+    final scoped = [
+      entry('Zoom', category: 'Travail', favorite: true),
+      entry('Banque', category: 'Finances'),
+      entry('Slack', category: 'travail'),
+      entry('Amazon', favorite: true, day: 9),
+    ];
+
+    test('lists favorites first in both sorts', () {
+      expect(filterAndSortEntries(scoped).map((e) => e.title), ['Amazon', 'Zoom', 'Banque', 'Slack']);
+      expect(filterAndSortEntries(scoped, sort: EntrySort.recent).map((e) => e.title).take(2), ['Amazon', 'Zoom']);
+    });
+
+    test('limits to favorites or to a category, ignoring case and accents', () {
+      expect(filterAndSortEntries(scoped, favoritesOnly: true).map((e) => e.title), ['Amazon', 'Zoom']);
+      expect(filterAndSortEntries(scoped, category: 'TRAVAIL').map((e) => e.title), ['Zoom', 'Slack']);
+    });
+
+    test('search also matches the category', () {
+      expect(filterAndSortEntries(scoped, query: 'financ').map((e) => e.title), ['Banque']);
+    });
+
+    test('collects categories once, keeping the first spelling', () {
+      expect(entryCategoriesOf(scoped), ['Finances', 'Travail']);
+      expect(entryCategoriesOf([entry('a', category: '  ')]), isEmpty);
+    });
+  });
+
+  test('entriesSharingPassword finds other entries with the same password', () {
+    final list = [entry('A', password: 'same'), entry('B', password: 'same'), entry('C', password: 'other'), entry('D')];
+
+    expect(entriesSharingPassword(list, 'same', exceptId: 'A').map((e) => e.title), ['B']);
+    expect(entriesSharingPassword(list, ''), isEmpty, reason: 'empty passwords are not reuse');
   });
 }

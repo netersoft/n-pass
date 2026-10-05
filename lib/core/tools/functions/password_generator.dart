@@ -86,3 +86,7 @@ String generatePassword(PasswordGeneratorOptions options, {Random? random}) {
 
   return chars.join();
 }
+
+/// Entropy of a password generated with [options] (slightly overestimated:
+/// ignores the one-character-per-charset guarantee).
+double generatedPasswordEntropy(PasswordGeneratorOptions options) => options.length * log(options.charsets.join().length) / ln2;

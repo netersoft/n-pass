@@ -103,10 +103,56 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     );
   }
 
+  Widget _scopeChips(EntriesFilterState filter, List<String> categories, bool hasFavorites) {
+    final notifier = ref.read(entriesFilterProvider.notifier);
+    Widget chip({required String label, required bool selected, required VoidCallback onSelected, IconData? icon}) => Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: ChoiceChip(
+        avatar: icon == null ? null : Icon(icon, size: 18),
+        label: Text(label),
+        selected: selected,
+        showCheckmark: false,
+        onSelected: (_) => onSelected(),
+      ),
+    );
+
+    return SizedBox(
+      height: 56,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        children: [
+          chip(label: context.t.allEntries, selected: !filter.isScoped, onSelected: notifier.setScope),
+          if (hasFavorites)
+            chip(
+              label: context.t.favorites,
+              icon: Icons.star,
+              selected: filter.favoritesOnly,
+              onSelected: () => notifier.setScope(favoritesOnly: true),
+            ),
+          for (final category in categories)
+            chip(
+              label: category,
+              selected: filter.category == category,
+              onSelected: () => notifier.setScope(category: category),
+            ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final filter = ref.watch(entriesFilterProvider);
     final entries = ref.watch(visibleEntriesProvider);
+    final categories = ref.watch(entryCategoriesProvider);
+    final hasFavorites = ref.watch(entriesProvider.select((value) => value.value?.any((e) => e.favorite) ?? false));
+    final showChips = categories.isNotEmpty || hasFavorites;
+
+    // Drop a scope that no longer matches anything (last favorite removed,
+    // category renamed).
+    final staleScope = (filter.category != null && !categories.contains(filter.category)) || (filter.favoritesOnly && !hasFavorites);
+    if (staleScope) WidgetsBinding.instance.addPostFrameCallback((_) => ref.read(entriesFilterProvider.notifier).setScope());
 
     return KeyboardDismissOnTap(
       child: PopScope(
@@ -123,25 +169,35 @@ class _MainScreenState extends ConsumerState<MainScreen> {
             onPressed: () => const NewEntryRoute().push<void>(context),
             child: const Icon(Icons.add),
           ),
-          body: entries.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, _) => Status(icon: Icons.error_outline, text: context.t.anErrorOccurred),
-            data: (list) {
-              if (list.isEmpty) {
-                return filter.query.trim().isEmpty
-                    ? Status(icon: Icons.lock_outline, title: context.t.noEntries, text: context.t.noEntriesHint)
-                    : Status(
-                        icon: Icons.search_off,
-                        text: context.t.noSearchResults(query: filter.query.trim()),
-                      );
-              }
-              return ListView.separated(
-                padding: const EdgeInsets.only(bottom: 88),
-                itemCount: list.length,
-                separatorBuilder: (_, _) => const Divider(height: 1, indent: 72),
-                itemBuilder: (context, index) => _EntryTile(entry: list[index], onDelete: _delete),
-              );
-            },
+          body: Column(
+            children: [
+              if (showChips) _scopeChips(filter, categories, hasFavorites),
+              Expanded(
+                child: entries.when(
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (error, _) => Status(icon: Icons.error_outline, text: context.t.anErrorOccurred),
+                  data: (list) {
+                    if (list.isEmpty) {
+                      if (filter.query.trim().isNotEmpty) {
+                        return Status(
+                          icon: Icons.search_off,
+                          text: context.t.noSearchResults(query: filter.query.trim()),
+                        );
+                      }
+                      return filter.isScoped
+                          ? Status(icon: Icons.filter_list_off, text: context.t.noEntriesInScope)
+                          : Status(icon: Icons.lock_outline, title: context.t.noEntries, text: context.t.noEntriesHint);
+                    }
+                    return ListView.separated(
+                      padding: const EdgeInsets.only(bottom: 88),
+                      itemCount: list.length,
+                      separatorBuilder: (_, _) => const Divider(height: 1, indent: 72),
+                      itemBuilder: (context, index) => _EntryTile(entry: list[index], onDelete: _delete),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -170,7 +226,12 @@ class _EntryTile extends StatelessWidget {
     onDismissed: (_) => onDelete(entry),
     child: ListTile(
       leading: EntryAvatar(title: entry.title),
-      title: Text(entry.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+      title: Row(
+        children: [
+          Flexible(child: Text(entry.title, maxLines: 1, overflow: TextOverflow.ellipsis)),
+          if (entry.favorite) ...[const SizedBox(width: 6), Icon(Icons.star, size: 16, color: Colors.amber.shade700, semanticLabel: context.t.favorite)],
+        ],
+      ),
       subtitle: _subtitle.isEmpty ? null : Text(_subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
       trailing: entry.password.isEmpty
           ? null

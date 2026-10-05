@@ -44,4 +44,8 @@ void main() {
       expect(() => generatePassword(const PasswordGeneratorOptions(length: 129)), throwsArgumentError);
     });
   });
+
+  test('generatedPasswordEntropy is length times log2 of the pool', () {
+    expect(generatedPasswordEntropy(const PasswordGeneratorOptions(length: 10, uppercase: false, symbols: false)), closeTo(10 * 5.17, 0.01));
+  });
 }

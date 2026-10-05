@@ -113,4 +113,38 @@ void main() {
     verify(() => vault.replaceEntries(any())).called(1);
     expect(c.read(entriesProvider).value!.map((e) => e.title), ['Only']);
   });
+
+  test('toggling a favorite keeps the update date', () async {
+    final c = container();
+    await c.read(entriesProvider.future);
+
+    await c.read(entriesProvider.notifier).toggleFavorite(entry('1', 'Mail'));
+
+    final saved = c.read(entryByIdProvider('1'))!;
+    expect(saved.favorite, isTrue);
+    expect(saved.updatedAt, DateTime.utc(2026));
+  });
+
+  test('the scope limits visible entries and lists categories', () async {
+    when(() => vault.readEntries()).thenAnswer(
+      (_) async => [
+        entry('1', 'Mail').copyWith(category: 'Perso'),
+        entry('2', 'Bank').copyWith(favorite: true),
+        entry('3', 'Slack').copyWith(category: 'Travail'),
+      ],
+    );
+    final c = container();
+    await c.read(entriesProvider.future);
+
+    expect(c.read(entryCategoriesProvider), ['Perso', 'Travail']);
+
+    c.read(entriesFilterProvider.notifier).setScope(category: 'Travail');
+    expect(c.read(visibleEntriesProvider).value!.map((e) => e.title), ['Slack']);
+
+    c.read(entriesFilterProvider.notifier).setScope(favoritesOnly: true);
+    expect(c.read(visibleEntriesProvider).value!.map((e) => e.title), ['Bank']);
+
+    c.read(entriesFilterProvider.notifier).setScope();
+    expect(c.read(visibleEntriesProvider).value, hasLength(3));
+  });
 }

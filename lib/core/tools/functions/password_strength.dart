@@ -28,17 +28,20 @@ PasswordStrength estimatePasswordStrength(String password) {
   final lower = password.toLowerCase();
   final isCommon = _commonPasswords.any(lower.contains) || RegExp(r'^\d+$').hasMatch(password);
 
-  final strength = switch (bits) {
-    < 28 => PasswordStrength.veryWeak,
-    < 36 => PasswordStrength.weak,
-    < 60 => PasswordStrength.fair,
-    < 80 => PasswordStrength.good,
-    _ => PasswordStrength.strong,
-  };
-
+  final strength = strengthFromEntropy(bits);
   if (isCommon && strength.index > PasswordStrength.weak.index) return PasswordStrength.weak;
   return strength;
 }
+
+/// Strength for a known entropy, e.g. of a generated password whose
+/// randomness is known exactly.
+PasswordStrength strengthFromEntropy(double bits) => switch (bits) {
+  < 28 => PasswordStrength.veryWeak,
+  < 36 => PasswordStrength.weak,
+  < 60 => PasswordStrength.fair,
+  < 80 => PasswordStrength.good,
+  _ => PasswordStrength.strong,
+};
 
 double estimatePasswordEntropy(String password) {
   var pool = 0;
