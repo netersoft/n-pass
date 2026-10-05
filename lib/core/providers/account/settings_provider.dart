@@ -12,6 +12,7 @@ import '../../enums/app_brightness.dart';
 import '../../helpers/router/navigation_helper.dart';
 import '../../routes/app_route.dart';
 import '../../services/di/locator.dart';
+import '../../services/i18n/locale_preference.dart';
 import '../../services/i18n/translations.g.dart';
 import '../../services/shared_preferences/keys.dart';
 import '../../services/shared_preferences/service.dart';
@@ -84,7 +85,7 @@ class Settings extends _$Settings {
 
   Future<void> changeLanguage(String newValue) async {
     final navigator = _navigationHelper.navigatorKey.currentState;
-    await LocaleSettings.setLocaleRaw(newValue);
+    await LocalePreference.save(prefs, newValue);
 
     try {
       _navigationHelper.go(const SettingsRoute().location);

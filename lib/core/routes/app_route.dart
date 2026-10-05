@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../view/redirection.dart';
+import '../../view/screens/about/about_screen.dart';
+import '../../view/screens/about/privacy_policy_screen.dart';
 import '../../view/screens/account/backup_screen.dart';
 import '../../view/screens/account/change_password_screen.dart';
 import '../../view/screens/account/settings_screen.dart';
@@ -67,6 +69,8 @@ class UnlockRoute extends GoRouteData with $UnlockRoute {
       routes: [
         TypedGoRoute<ChangePasswordRoute>(path: 'password'),
         TypedGoRoute<BackupRoute>(path: 'backup'),
+        TypedGoRoute<AboutRoute>(path: 'about'),
+        TypedGoRoute<PrivacyPolicyRoute>(path: 'privacy'),
       ],
     ),
     TypedGoRoute<NewEntryRoute>(path: 'entries/new'),
@@ -102,6 +106,20 @@ class BackupRoute extends GoRouteData with $BackupRoute {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) => SwipeablePage<void>(builder: (context) => const BackupScreen());
+}
+
+class AboutRoute extends GoRouteData with $AboutRoute {
+  const AboutRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) => SwipeablePage<void>(builder: (context) => const AboutScreen());
+}
+
+class PrivacyPolicyRoute extends GoRouteData with $PrivacyPolicyRoute {
+  const PrivacyPolicyRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) => SwipeablePage<void>(builder: (context) => const PrivacyPolicyScreen());
 }
 
 class NewEntryRoute extends GoRouteData with $NewEntryRoute {

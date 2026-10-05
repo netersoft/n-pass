@@ -16,7 +16,6 @@
   "ok": "Ok",
   "retry": "Réessayer",
   "privacyPolicy": "Politique de confidentialité",
-  "termsOfUse": "Conditions d'utilisation",
   "appNameAlt": "NPass",
   "appDescription": "NPass est un gestionnaire de mots de passe hors ligne : vos comptes sont chiffrés sur votre appareil et n'en sortent jamais.",
   "loading": "Chargement",
@@ -218,5 +217,10 @@
   "add": "Ajouter",
   "passwordReused": "Mot de passe aussi utilisé pour : $titles",
   "passwordReusedHint": "Un mot de passe différent pour chaque compte limite les dégâts en cas de fuite.",
-  "noEntriesInScope": "Aucun compte dans cette sélection"
+  "noEntriesInScope": "Aucun compte dans cette sélection",
+  "versionLabel": "Version $version",
+  "openSourceLicenses": "Licences open source",
+  "credits": "Crédits",
+  "effWordlistCredit": "Liste de mots des phrases de passe : Electronic Frontier Foundation, CC BY 3.0 US",
+  "legacyNotice": "NPass existe depuis 2018. Cette version a été entièrement réécrite, avec un chiffrement moderne et sans aucune connexion à Internet."
 }

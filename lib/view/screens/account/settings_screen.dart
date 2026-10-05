@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 import '../../../core/enums/app_brightness.dart';
-import '../../../core/helpers/ui/dialog_helper.dart';
 import '../../../core/providers/account/security_settings_provider.dart';
 import '../../../core/providers/account/settings_provider.dart';
 import '../../../core/routes/app_route.dart';
@@ -244,55 +242,16 @@ class SettingsListWrapper extends ConsumerWidget {
           title: Text(context.t.appName),
           tiles: <SettingsTile>[
             SettingsTile.navigation(
-              leading: const Icon(Icons.info),
+              leading: const Icon(Icons.info_outline),
               trailing: const Icon(Icons.chevron_right),
               title: Text(context.t.about),
-              onPressed: (context) => {
-                DialogHelper.showContent(
-                  context,
-                  title: Text(
-                    context.t.about,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgPicture.asset(
-                        AppTheme.pickByTheme(
-                          light: 'assets/images/launcher/logo.svg',
-                          dark: 'assets/images/launcher/logo_reverse.svg',
-                        ),
-                        width: 160.0,
-                      ),
-                      Text(
-                        context.t.appNameAlt,
-                        style: const TextStyle(fontSize: 16.0),
-                      ),
-                      FutureBuilder<PackageInfo>(
-                        future: PackageInfo.fromPlatform(),
-                        builder: (ctx, snapshot) {
-                          if (snapshot.hasData) {
-                            return Text(
-                              'Version ${snapshot.data!.version}',
-                              style: const TextStyle(fontSize: 14.0),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        },
-                      ),
-                      const SizedBox(height: 25),
-                      Text(
-                        context.t.appDescription,
-                        style: const TextStyle(fontSize: 16.0),
-                        textAlign: TextAlign.justify,
-                      ),
-                    ],
-                  ),
-                ),
-              },
+              onPressed: (context) => const AboutRoute().push<void>(context),
+            ),
+            SettingsTile.navigation(
+              leading: const Icon(Icons.privacy_tip_outlined),
+              trailing: const Icon(Icons.chevron_right),
+              title: Text(context.t.privacyPolicy),
+              onPressed: (context) => const PrivacyPolicyRoute().push<void>(context),
             ),
             SettingsTile.navigation(
               leading: const Icon(Icons.campaign),
