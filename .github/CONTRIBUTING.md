@@ -1,6 +1,6 @@
 # Contributing to Netersoft projects
 
-This guide applies to every repository in the organization. For the full project canvas (README template, Definition of Done, ADRs...), see [project-guidelines](https://github.com/edpage-hq/project-guidelines).
+This guide applies to every repository in the organization.
 
 ## Git workflow
 
