@@ -24,4 +24,12 @@ void main() {
       expect(estimatePasswordEntropy('abcdef'), lessThan(estimatePasswordEntropy('aqzmxk')));
     });
   });
+
+  test('strengthFromEntropy uses the same thresholds', () {
+    expect(strengthFromEntropy(20), PasswordStrength.veryWeak);
+    expect(strengthFromEntropy(30), PasswordStrength.weak);
+    expect(strengthFromEntropy(50), PasswordStrength.fair);
+    expect(strengthFromEntropy(70), PasswordStrength.good);
+    expect(strengthFromEntropy(100), PasswordStrength.strong);
+  });
 }

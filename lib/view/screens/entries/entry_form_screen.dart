@@ -9,10 +9,13 @@ import '../../../core/models/vault_entry.dart';
 import '../../../core/providers/vault/entries_provider.dart';
 import '../../../core/services/i18n/translations.g.dart';
 import '../../../core/services/vault/service.dart';
+import '../../../core/tools/functions/entry_functions.dart';
 import '../../../core/tools/functions/password_strength.dart';
 import '../../../core/tools/functions/url_functions.dart';
 import '../../components/inputs/password_field.dart';
+import '../../components/vault/custom_field_dialog.dart';
 import '../../components/vault/generator_sheet.dart';
+import '../../components/vault/reuse_warning.dart';
 import '../../components/vault/strength_meter.dart';
 import '../../themes/app_theme.dart';
 
@@ -30,8 +33,42 @@ class _EntryFormScreenState extends ConsumerState<EntryFormScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   late final VaultEntry? _original = widget.entryId == null ? null : ref.read(entryByIdProvider(widget.entryId!));
   late String _password = _original?.password ?? '';
+  late final TextEditingController _categoryController = TextEditingController(text: _original?.category);
+  late bool _favorite = _original?.favorite ?? false;
+  late final List<_FieldDraft> _fields = [for (final field in _original?.customFields ?? const <CustomField>[]) _FieldDraft(field)];
   bool _dirty = false;
   bool _saving = false;
+
+  @override
+  void dispose() {
+    _categoryController.dispose();
+    for (final field in _fields) {
+      field.controller.dispose();
+      field.focusNode.dispose();
+    }
+    super.dispose();
+  }
+
+  void _markDirty() => _dirty = true;
+
+  Future<void> _addField() async {
+    final field = await showCustomFieldDialog(context);
+    if (field == null || !mounted) return;
+    final draft = _FieldDraft(field);
+    setState(() {
+      _fields.add(draft);
+      _dirty = true;
+    });
+    // Straight to the value, instead of the field focused before the dialog.
+    WidgetsBinding.instance.addPostFrameCallback((_) => draft.focusNode.requestFocus());
+  }
+
+  void _removeField(_FieldDraft field) => setState(() {
+    _fields.remove(field);
+    field.controller.dispose();
+    field.focusNode.dispose();
+    _dirty = true;
+  });
 
   Future<void> _generate() async {
     final generated = await showGeneratorSheet(context);
@@ -53,6 +90,9 @@ class _EntryFormScreenState extends ConsumerState<EntryFormScreen> {
       password: values['password'] as String? ?? '',
       url: field('url'),
       notes: values['notes'] as String? ?? '',
+      category: _categoryController.text.trim(),
+      favorite: _favorite,
+      customFields: [for (final draft in _fields) draft.field.copyWith(value: draft.controller.text)],
       updatedAt: now,
     );
 
@@ -96,10 +136,74 @@ class _EntryFormScreenState extends ConsumerState<EntryFormScreen> {
     border: const OutlineInputBorder(),
   );
 
+  /// Free text, with the categories already in use offered as chips.
+  Widget _categoryField(List<String> categories) {
+    final current = normalizeForSearch(_categoryController.text.trim());
+    final suggestions = categories.where((c) => normalizeForSearch(c) != current && normalizeForSearch(c).contains(current)).take(8).toList();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: _categoryController,
+          textCapitalization: TextCapitalization.sentences,
+          textInputAction: TextInputAction.next,
+          decoration: _decoration(context.t.category, Icons.folder_outlined, hint: context.t.categoryHint),
+          onChanged: (_) => setState(() => _dirty = true),
+        ),
+        if (suggestions.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              for (final category in suggestions)
+                ActionChip(
+                  avatar: const Icon(Icons.folder_outlined, size: 18),
+                  label: Text(category),
+                  onPressed: () => setState(() {
+                    _categoryController.text = category;
+                    _dirty = true;
+                  }),
+                ),
+            ],
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _customField(_FieldDraft draft) => Padding(
+    padding: const EdgeInsets.only(bottom: 16),
+    child: TextField(
+      controller: draft.controller,
+      focusNode: draft.focusNode,
+      obscureText: draft.field.hidden && draft.obscured,
+      enableSuggestions: !draft.field.hidden,
+      autocorrect: !draft.field.hidden,
+      onChanged: (_) => _markDirty(),
+      decoration: _decoration(draft.field.label, draft.field.hidden ? Icons.lock_outline : Icons.short_text).copyWith(
+        suffixIcon: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (draft.field.hidden)
+              IconButton(
+                tooltip: draft.obscured ? context.t.show : context.t.hide,
+                icon: Icon(draft.obscured ? Icons.visibility : Icons.visibility_off),
+                onPressed: () => setState(() => draft.obscured = !draft.obscured),
+              ),
+            IconButton(tooltip: context.t.removeField, icon: const Icon(Icons.remove_circle_outline), onPressed: () => _removeField(draft)),
+          ],
+        ),
+      ),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     final original = _original;
     const gap = SizedBox(height: 16);
+    final entries = ref.watch(entriesProvider).value ?? const <VaultEntry>[];
+    final sharing = entriesSharingPassword(entries, _password, exceptId: original?.id);
 
     return KeyboardDismissOnTap(
       child: PopScope(
@@ -165,6 +269,7 @@ class _EntryFormScreenState extends ConsumerState<EntryFormScreen> {
                     const SizedBox(height: 10),
                     StrengthMeter(strength: estimatePasswordStrength(_password)),
                   ],
+                  if (sharing.isNotEmpty) ReuseWarning(titles: sharing.map((e) => e.title).toList(), margin: const EdgeInsets.only(top: 12)),
                   gap,
                   FormBuilderTextField(
                     name: 'url',
@@ -176,6 +281,8 @@ class _EntryFormScreenState extends ConsumerState<EntryFormScreen> {
                     validator: _validateUrl,
                   ),
                   gap,
+                  _categoryField(entryCategoriesOf(entries)),
+                  gap,
                   FormBuilderTextField(
                     name: 'notes',
                     initialValue: original?.notes,
@@ -183,6 +290,25 @@ class _EntryFormScreenState extends ConsumerState<EntryFormScreen> {
                     maxLines: 8,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: _decoration(context.t.notes, Icons.notes),
+                  ),
+                  gap,
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    secondary: Icon(_favorite ? Icons.star : Icons.star_border, color: _favorite ? Colors.amber : AppTheme.getIconColor()),
+                    title: Text(context.t.favorite),
+                    value: _favorite,
+                    onChanged: (value) => setState(() {
+                      _favorite = value;
+                      _dirty = true;
+                    }),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(context.t.customFields, style: Theme.of(context).textTheme.titleSmall),
+                  const SizedBox(height: 12),
+                  for (final draft in _fields) _customField(draft),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(onPressed: _addField, icon: const Icon(Icons.add), label: Text(context.t.addCustomField)),
                   ),
                   const SizedBox(height: 24),
                   FilledButton(
@@ -202,4 +328,15 @@ class _EntryFormScreenState extends ConsumerState<EntryFormScreen> {
       ),
     );
   }
+}
+
+/// A custom field being edited: its label and hidden flag are fixed, the value
+/// lives in [controller].
+class _FieldDraft {
+  final CustomField field;
+  final TextEditingController controller;
+  final FocusNode focusNode = FocusNode();
+  bool obscured = true;
+
+  _FieldDraft(this.field) : controller = TextEditingController(text: field.value);
 }

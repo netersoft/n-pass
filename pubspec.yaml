@@ -135,6 +135,8 @@ flutter:
     # DOCS
     - assets/docs/fr/
     - assets/docs/en/
+    # WORDLISTS (passphrase generator)
+    - assets/wordlists/
 
   fonts:
     - family: proxima_nova
