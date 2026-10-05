@@ -234,5 +234,13 @@
   "period": "Durée de validité",
   "seconds": "$n s",
   "totpCode": "Code 2FA",
-  "removeTotp": "Retirer la 2FA"
+  "removeTotp": "Retirer la 2FA",
+  "scanQrCode": "Scanner un QR code",
+  "scanQrHint": "Visez le QR code affiché par le site lors de l'activation de la 2FA.",
+  "importImage": "Importer une image",
+  "importImageHint": "Une capture d'écran du QR code",
+  "notTotpQr": "Ce QR code n'est pas un code 2FA",
+  "noQrInImage": "Aucun QR code lisible dans cette image",
+  "cameraDenied": "NPass n'a pas accès à la caméra. Autorisez-la dans les réglages du téléphone, ou importez une capture d'écran du QR code.",
+  "openSettings": "Ouvrir les réglages"
 }

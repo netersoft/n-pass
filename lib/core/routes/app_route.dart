@@ -9,6 +9,7 @@ import '../../view/screens/account/change_password_screen.dart';
 import '../../view/screens/account/settings_screen.dart';
 import '../../view/screens/entries/entry_detail_screen.dart';
 import '../../view/screens/entries/entry_form_screen.dart';
+import '../../view/screens/entries/scan_qr_screen.dart';
 import '../../view/screens/main_screen.dart';
 import '../../view/screens/onboarding/intro_screen.dart';
 import '../../view/screens/vault/create_vault_screen.dart';
@@ -74,6 +75,7 @@ class UnlockRoute extends GoRouteData with $UnlockRoute {
       ],
     ),
     TypedGoRoute<NewEntryRoute>(path: 'entries/new'),
+    TypedGoRoute<ScanQrRoute>(path: 'scan-qr'),
     TypedGoRoute<EntryRoute>(
       path: 'entries/:id',
       routes: [TypedGoRoute<EditEntryRoute>(path: 'edit')],
@@ -120,6 +122,13 @@ class PrivacyPolicyRoute extends GoRouteData with $PrivacyPolicyRoute {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) => SwipeablePage<void>(builder: (context) => const PrivacyPolicyScreen());
+}
+
+class ScanQrRoute extends GoRouteData with $ScanQrRoute {
+  const ScanQrRoute();
+
+  @override
+  Page<String> buildPage(BuildContext context, GoRouterState state) => SwipeablePage<String>(builder: (context) => const ScanQrScreen());
 }
 
 class NewEntryRoute extends GoRouteData with $NewEntryRoute {

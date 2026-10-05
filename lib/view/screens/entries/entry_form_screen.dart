@@ -8,6 +8,7 @@ import '../../../core/helpers/ui/dialog_helper.dart';
 import '../../../core/models/totp_config.dart';
 import '../../../core/models/vault_entry.dart';
 import '../../../core/providers/vault/entries_provider.dart';
+import '../../../core/routes/app_route.dart';
 import '../../../core/services/i18n/translations.g.dart';
 import '../../../core/services/vault/service.dart';
 import '../../../core/tools/functions/entry_functions.dart';
@@ -80,6 +81,13 @@ class _EntryFormScreenState extends ConsumerState<EntryFormScreen> {
     });
   }
 
+  Future<void> _scanTotp() async {
+    final link = await const ScanQrRoute().push<String>(context);
+    if (link == null || !mounted) return;
+    // Goes through onChanged, which fills the advanced options.
+    _formKey.currentState?.fields['totp']?.didChange(link);
+  }
+
   String? _validateTotp(String? value) {
     final text = (value ?? '').trim();
     if (text.isEmpty) return null;
@@ -118,6 +126,7 @@ class _EntryFormScreenState extends ConsumerState<EntryFormScreen> {
           enableSuggestions: false,
           keyboardType: TextInputType.visiblePassword,
           decoration: _decoration(context.t.totpSecret, Icons.verified_user_outlined).copyWith(
+            suffixIcon: IconButton(tooltip: context.t.scanQrCode, icon: const Icon(Icons.qr_code_scanner), onPressed: _scanTotp),
             helperText: totp == null ? context.t.totpSecretHint : context.t.totpPreview(code: formatTotp(generateTotp(totp, DateTime.now()))),
             helperMaxLines: 2,
             errorMaxLines: 3,
