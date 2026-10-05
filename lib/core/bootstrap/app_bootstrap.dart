@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
@@ -32,4 +33,19 @@ Future<void> bootstrapApp({
   await setupLocator();
 
   await LocaleSettings.useDeviceLocale();
+
+  LicenseRegistry.addLicense(_bundledContentLicenses);
+}
+
+/// Content shipped with the app that is not a Dart package, so it shows in
+/// the open source licenses page.
+Stream<LicenseEntry> _bundledContentLicenses() async* {
+  yield const LicenseEntryWithLineBreaks(
+    ['EFF large wordlist'],
+    '''
+EFF's Long Wordlist for passphrases (https://www.eff.org/dice), by the Electronic Frontier Foundation.
+Used with the dice numbers removed.
+
+Licensed under the Creative Commons Attribution 3.0 United States License (CC BY 3.0 US): https://creativecommons.org/licenses/by/3.0/us/''',
+  );
 }

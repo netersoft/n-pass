@@ -15,7 +15,9 @@ flutter run                # iOS
 ## Essential Commands
 
 ```bash
-# Generate launcher icons (from assets/images/launcher/icon.png)
+# Redraw the icon sources (vector padlock, needs cairosvg and Pillow),
+# then generate launcher icons and the native splash from them
+python3 tool/generate_icons.py
 dart run icons_launcher:create
 
 # Generate splash screen

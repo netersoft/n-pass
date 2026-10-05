@@ -16,7 +16,6 @@
   "ok": "OK",
   "retry": "Try again",
   "privacyPolicy": "Privacy policy",
-  "termsOfUse": "Terms of use",
   "appNameAlt": "NPass",
   "appDescription": "NPass is an offline password manager: your accounts are encrypted on your device and never leave it.",
   "loading": "Loading",
@@ -218,5 +217,10 @@
   "add": "Add",
   "passwordReused": "Password also used for: $titles",
   "passwordReusedHint": "A different password for each account limits the damage of a leak.",
-  "noEntriesInScope": "No accounts in this selection"
+  "noEntriesInScope": "No accounts in this selection",
+  "versionLabel": "Version $version",
+  "openSourceLicenses": "Open source licenses",
+  "credits": "Credits",
+  "effWordlistCredit": "Passphrase wordlist: Electronic Frontier Foundation, CC BY 3.0 US",
+  "legacyNotice": "NPass has existed since 2018. This version was fully rewritten, with modern encryption and no Internet connection at all."
 }

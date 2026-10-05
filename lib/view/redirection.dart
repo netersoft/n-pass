@@ -1,14 +1,14 @@
-import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lottie/lottie.dart';
 
 import '../core/providers/navigation/redirection_provider.dart';
 import 'themes/app_colors.dart';
 import 'themes/app_theme.dart';
 
-/// Redirection screen
+/// First route: picks the intro, vault creation or unlock screen right away.
+/// Shows the same background as the native splash, so the hand-off is
+/// seamless.
 class Redirection extends ConsumerStatefulWidget {
   const Redirection({super.key});
 
@@ -20,42 +20,18 @@ class RedirectionState extends ConsumerState<Redirection> {
   @override
   void initState() {
     super.initState();
-
-    FlutterNativeSplash.remove();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FlutterNativeSplash.remove();
+      ref.read(redirectionProvider.notifier).redirect(ref);
+    });
   }
 
-  /// Builds a FlutterSplashScreen widget with a centered Lottie animation.
-  ///
-  /// The splash screen has a blue background color and a duration of 2000 milliseconds.
-  /// When the splash screen ends, it calls the [redirect] method of the [redirectionProvider]
-  /// with the current [BuildContext].
-  ///
-  /// Returns a [Widget] representing the splash screen.
-  /// But if you don't use animation, just return a [Container] widget like this:
-  /// Container(color: isLightTheme() ? Colors.white : AppColors.raisinBlack);
   @override
   Widget build(BuildContext context) {
     ref.watch(redirectionProvider);
-
-    return FlutterSplashScreen(
-      useImmersiveMode: true,
-      duration: const Duration(milliseconds: 2000),
-      backgroundColor: AppTheme.pickColor(
-        light: AppTheme.primaryColor,
-        dark: AppColors.raisinBlack,
-      ),
-      splashScreenBody: Center(
-        child: Lottie.asset(
-          'assets/animations/logo.json',
-          repeat: false,
-          height: 200,
-          width: 200,
-        ),
-      ),
-      onInit: () {},
-      onEnd: () {
-        ref.read(redirectionProvider.notifier).redirect(ref);
-      },
+    return ColoredBox(
+      color: AppTheme.pickColor(light: AppTheme.primaryColor, dark: AppColors.raisinBlack),
+      child: Center(child: Image.asset('assets/images/launcher/splash_logo.png', width: 360)),
     );
   }
 }
