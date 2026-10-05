@@ -222,5 +222,17 @@
   "openSourceLicenses": "Licences open source",
   "credits": "Crédits",
   "effWordlistCredit": "Liste de mots des phrases de passe : Electronic Frontier Foundation, CC BY 3.0 US",
-  "legacyNotice": "NPass existe depuis 2018. Cette version a été entièrement réécrite, avec un chiffrement moderne et sans aucune connexion à Internet."
+  "legacyNotice": "NPass existe depuis 2018. Cette version a été entièrement réécrite, avec un chiffrement moderne et sans aucune connexion à Internet.",
+  "twoFactor": "Double authentification (2FA)",
+  "totpSecret": "Clé 2FA ou lien otpauth://",
+  "totpSecretHint": "La clé affichée par le site quand vous activez la 2FA",
+  "invalidTotp": "Clé invalide : copiez la clé affichée par le site, ou le lien otpauth://",
+  "totpPreview": "Code actuel : $code",
+  "advancedOptions": "Options avancées",
+  "algorithm": "Algorithme",
+  "digitsCount": "Nombre de chiffres",
+  "period": "Durée de validité",
+  "seconds": "$n s",
+  "totpCode": "Code 2FA",
+  "removeTotp": "Retirer la 2FA"
 }
