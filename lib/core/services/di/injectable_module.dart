@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import '../../helpers/router/navigation_helper.dart';
 import '../auto_lock/service.dart';
 import '../biometrics/service.dart';
+import '../clipboard/service.dart';
 import '../hive/service.dart';
 import '../shared_preferences/service.dart';
 import '../vault/service.dart';
@@ -30,4 +31,7 @@ abstract class AppModule {
 
   @singleton
   AutoLockService autoLock(SharedPreferencesService prefs) => AutoLockService(prefs);
+
+  @singleton
+  ClipboardService get clipboard => ClipboardService();
 }
