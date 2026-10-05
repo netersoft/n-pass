@@ -1,10 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'totp_config.dart';
+
 part 'vault_entry.g.dart';
 
 /// A stored account. Serialized to JSON, then encrypted as a whole: new
 /// fields must have defaults so older entries still decode.
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class VaultEntry {
   final String id;
   final String title;
@@ -18,6 +20,9 @@ class VaultEntry {
   final String category;
   final bool favorite;
   final List<CustomField> customFields;
+
+  /// Two-factor code generator, when the account uses one.
+  final TotpConfig? totp;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -34,6 +39,7 @@ class VaultEntry {
     this.category = '',
     this.favorite = false,
     this.customFields = const [],
+    this.totp,
   });
 
   factory VaultEntry.fromJson(Map<String, dynamic> json) => _$VaultEntryFromJson(json);
@@ -50,6 +56,8 @@ class VaultEntry {
     String? category,
     bool? favorite,
     List<CustomField>? customFields,
+    TotpConfig? totp,
+    bool clearTotp = false,
     DateTime? updatedAt,
   }) => VaultEntry(
     id: id,
@@ -62,6 +70,7 @@ class VaultEntry {
     category: category ?? this.category,
     favorite: favorite ?? this.favorite,
     customFields: customFields ?? this.customFields,
+    totp: clearTotp ? null : (totp ?? this.totp),
     createdAt: createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );

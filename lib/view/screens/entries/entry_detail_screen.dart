@@ -18,6 +18,7 @@ import '../../components/vault/copy_feedback.dart';
 import '../../components/vault/entry_avatar.dart';
 import '../../components/vault/reuse_warning.dart';
 import '../../components/vault/strength_meter.dart';
+import '../../components/vault/totp_tile.dart';
 import '../../themes/app_theme.dart';
 
 class EntryDetailScreen extends ConsumerWidget {
@@ -102,6 +103,7 @@ class EntryDetailScreen extends ConsumerWidget {
                 if (entry.email.isNotEmpty) _FieldTile(icon: Icons.alternate_email, label: context.t.emailAddress, value: entry.email),
                 if (entry.password.isNotEmpty) _PasswordTile(password: entry.password),
                 if (sharing.isNotEmpty) ReuseWarning(titles: sharing.map((e) => e.title).toList()),
+                if (entry.totp case final totp?) TotpTile(config: totp),
                 if (entry.url.isNotEmpty) _FieldTile(icon: Icons.language, label: context.t.website, value: entry.url, isUrl: true),
                 for (final field in entry.customFields.where((f) => f.value.isNotEmpty))
                   if (field.hidden)

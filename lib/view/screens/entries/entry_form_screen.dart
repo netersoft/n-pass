@@ -5,12 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/helpers/ui/dialog_helper.dart';
+import '../../../core/models/totp_config.dart';
 import '../../../core/models/vault_entry.dart';
 import '../../../core/providers/vault/entries_provider.dart';
 import '../../../core/services/i18n/translations.g.dart';
 import '../../../core/services/vault/service.dart';
 import '../../../core/tools/functions/entry_functions.dart';
 import '../../../core/tools/functions/password_strength.dart';
+import '../../../core/tools/functions/totp.dart';
 import '../../../core/tools/functions/url_functions.dart';
 import '../../components/inputs/password_field.dart';
 import '../../components/vault/custom_field_dialog.dart';
@@ -35,6 +37,10 @@ class _EntryFormScreenState extends ConsumerState<EntryFormScreen> {
   late String _password = _original?.password ?? '';
   late final TextEditingController _categoryController = TextEditingController(text: _original?.category);
   late bool _favorite = _original?.favorite ?? false;
+  late String _totpSecret = _original?.totp?.secret ?? '';
+  late TotpAlgorithm _totpAlgorithm = _original?.totp?.algorithm ?? TotpAlgorithm.sha1;
+  late int _totpDigits = _original?.totp?.digits ?? 6;
+  late int _totpPeriod = _original?.totp?.period ?? 30;
   late final List<_FieldDraft> _fields = [for (final field in _original?.customFields ?? const <CustomField>[]) _FieldDraft(field)];
   bool _dirty = false;
   bool _saving = false;
@@ -50,6 +56,95 @@ class _EntryFormScreenState extends ConsumerState<EntryFormScreen> {
   }
 
   void _markDirty() => _dirty = true;
+
+  /// Null when the field is empty or invalid. The field holds a secret or an
+  /// otpauth:// link; the options come from the dropdowns.
+  TotpConfig? get _totp {
+    final parsed = parseTotpInput(_totpSecret);
+    if (parsed == null) return null;
+    return parsed.copyWith(algorithm: _totpAlgorithm, digits: _totpDigits, period: _totpPeriod);
+  }
+
+  /// A valid otpauth:// link sets the options it carries.
+  void _onTotpChanged(String? value) {
+    final text = value ?? '';
+    final fromLink = text.trim().toLowerCase().startsWith('otpauth://') ? parseTotpInput(text) : null;
+    setState(() {
+      _dirty = true;
+      _totpSecret = text;
+      if (fromLink != null) {
+        _totpAlgorithm = fromLink.algorithm;
+        _totpDigits = fromLink.digits;
+        _totpPeriod = fromLink.period;
+      }
+    });
+  }
+
+  String? _validateTotp(String? value) {
+    final text = (value ?? '').trim();
+    if (text.isEmpty) return null;
+    return parseTotpInput(text) == null ? context.t.invalidTotp : null;
+  }
+
+  Widget _totpSection() {
+    final totp = _totp;
+    Widget dropdown<T>(String label, T value, List<T> values, String Function(T) name, ValueChanged<T> onChanged) => ListTile(
+      contentPadding: EdgeInsets.zero,
+      dense: true,
+      title: Text(label),
+      trailing: DropdownButton<T>(
+        value: value,
+        underline: const SizedBox.shrink(),
+        items: [for (final v in values) DropdownMenuItem(value: v, child: Text(name(v)))],
+        onChanged: (v) {
+          if (v == null) return;
+          setState(() {
+            onChanged(v);
+            _dirty = true;
+          });
+        },
+      ),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(context.t.twoFactor, style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 12),
+        FormBuilderTextField(
+          name: 'totp',
+          initialValue: _totpSecret,
+          autocorrect: false,
+          enableSuggestions: false,
+          keyboardType: TextInputType.visiblePassword,
+          decoration: _decoration(context.t.totpSecret, Icons.verified_user_outlined).copyWith(
+            helperText: totp == null ? context.t.totpSecretHint : context.t.totpPreview(code: formatTotp(generateTotp(totp, DateTime.now()))),
+            helperMaxLines: 2,
+            errorMaxLines: 3,
+          ),
+          validator: _validateTotp,
+          onChanged: _onTotpChanged,
+        ),
+        if (_totpSecret.trim().isNotEmpty)
+          ExpansionTile(
+            tilePadding: EdgeInsets.zero,
+            childrenPadding: EdgeInsets.zero,
+            title: Text(context.t.advancedOptions, style: Theme.of(context).textTheme.bodyMedium),
+            children: [
+              dropdown(context.t.algorithm, _totpAlgorithm, TotpAlgorithm.values, (a) => a.name.toUpperCase(), (v) => _totpAlgorithm = v),
+              dropdown(context.t.digitsCount, _totpDigits, TotpConfig.supportedDigits, (d) => '$d', (v) => _totpDigits = v),
+              dropdown(
+                context.t.period,
+                _totpPeriod,
+                {...TotpConfig.supportedPeriods, _totpPeriod}.toList(),
+                (p) => context.t.seconds(n: p),
+                (v) => _totpPeriod = v,
+              ),
+            ],
+          ),
+      ],
+    );
+  }
 
   Future<void> _addField() async {
     final field = await showCustomFieldDialog(context);
@@ -93,6 +188,8 @@ class _EntryFormScreenState extends ConsumerState<EntryFormScreen> {
       category: _categoryController.text.trim(),
       favorite: _favorite,
       customFields: [for (final draft in _fields) draft.field.copyWith(value: draft.controller.text)],
+      totp: _totp,
+      clearTotp: _totp == null,
       updatedAt: now,
     );
 
@@ -270,6 +367,8 @@ class _EntryFormScreenState extends ConsumerState<EntryFormScreen> {
                     StrengthMeter(strength: estimatePasswordStrength(_password)),
                   ],
                   if (sharing.isNotEmpty) ReuseWarning(titles: sharing.map((e) => e.title).toList(), margin: const EdgeInsets.only(top: 12)),
+                  gap,
+                  _totpSection(),
                   gap,
                   FormBuilderTextField(
                     name: 'url',
