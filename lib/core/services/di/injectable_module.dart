@@ -4,6 +4,7 @@ import '../../helpers/router/navigation_helper.dart';
 import '../auto_lock/service.dart';
 import '../backup/service.dart';
 import '../biometrics/service.dart';
+import '../camera/service.dart';
 import '../clipboard/service.dart';
 import '../files/service.dart';
 import '../hive/service.dart';
@@ -39,6 +40,9 @@ abstract class AppModule {
 
   @singleton
   BackupService get backup => BackupService();
+
+  @singleton
+  CameraPermissionService camera(AutoLockService autoLock) => CameraPermissionService(autoLock);
 
   @singleton
   FileTransferService fileTransfer(AutoLockService autoLock) => FileTransferService(autoLock);

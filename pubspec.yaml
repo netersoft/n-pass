@@ -54,6 +54,9 @@ dependencies:
   cryptography: ^2.9.0
   local_auth: ^3.0.2
   file_selector: ^1.1.0
+  qr_code_scanner_plus: ^2.3.0
+  zxing2: ^0.2.4
+  image: ^4.10.1
 
 dev_dependencies:
   flutter_test:

@@ -39,6 +39,18 @@ class FileTransferService {
     return result.status != ShareResultStatus.dismissed;
   }
 
+  /// Returns the content of the image the user picked, or null when cancelled.
+  Future<Uint8List?> pickImage() async {
+    const images = XTypeGroup(
+      label: 'images',
+      extensions: ['png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp'],
+      mimeTypes: ['image/*'],
+      uniformTypeIdentifiers: ['public.image'],
+    );
+    final file = await _autoLock.whileExternal(() => openFile(acceptedTypeGroups: const [images]));
+    return file?.readAsBytes();
+  }
+
   /// Returns the content of the file the user picked, or null when cancelled.
   Future<Uint8List?> pickFile() async {
     final file = await _autoLock.whileExternal(openFile);

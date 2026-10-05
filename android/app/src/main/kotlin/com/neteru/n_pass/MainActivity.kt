@@ -2,12 +2,17 @@ package com.neteru.n_pass
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.Manifest
+import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.PersistableBundle
+import android.provider.Settings
 import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
 import io.flutter.embedding.android.FlutterFragmentActivity
@@ -36,6 +41,17 @@ class MainActivity : FlutterFragmentActivity() {
         }
     }
 
+    // Camera permission for the QR scanner. Requested here rather than by the
+    // scanner plugin, which asks again on every resume while it is denied.
+    private var pendingCameraRequest: MethodChannel.Result? = null
+    private val requestCamera = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        pendingCameraRequest?.success(granted)
+        pendingCameraRequest = null
+    }
+
+    private val hasCameraPermission
+        get() = checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Keep vault content out of screenshots, screen recordings and the
@@ -53,6 +69,25 @@ class MainActivity : FlutterFragmentActivity() {
             when (call.method) {
                 "copySensitive" -> {
                     copySensitive(call.argument<String>("text")!!, call.argument<Int>("clearAfterMs")!!.toLong())
+                    result.success(null)
+                }
+                else -> result.notImplemented()
+            }
+        }
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "npass/camera").setMethodCallHandler { call, result ->
+            when (call.method) {
+                "check" -> result.success(hasCameraPermission)
+                "request" -> {
+                    if (hasCameraPermission) {
+                        result.success(true)
+                    } else {
+                        pendingCameraRequest?.success(false)
+                        pendingCameraRequest = result
+                        requestCamera.launch(Manifest.permission.CAMERA)
+                    }
+                }
+                "openSettings" -> {
+                    startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null)))
                     result.success(null)
                 }
                 else -> result.notImplemented()
