@@ -73,6 +73,17 @@ Translations live in `assets/i18n/*.i18n.json` and are used through `context.t` 
 
 Generated files (`*.g.dart`, `*.config.dart`) are git-ignored and must not be edited by hand.
 
+## Security model
+
+Implemented in `lib/core/services/vault/` with [`cryptography`](https://pub.dev/packages/cryptography) (pure Dart, no native code):
+
+- A random 256-bit **vault key** encrypts every entry with AES-256-GCM. Each entry is serialized to JSON and encrypted as a whole, with its id bound as associated data, so a ciphertext can't be moved to another entry.
+- The vault key is stored encrypted with a **key derived from the master password** with Argon2id (64 MiB, 2 passes, 1 lane, random 16-byte salt). The derivation runs in a background isolate and takes about 0.5 s on the Android emulator. The parameters are stored next to the wrapped key, so they can be raised later.
+- Changing the master password only re-encrypts the vault key.
+- The header also holds a check value encrypted with the vault key. It validates a key obtained without the password (e.g. released by biometrics).
+- The master password is never stored, and a forgotten master password can't be recovered.
+- Entries live in the Hive box `vault_entries` as opaque blobs. The header lives in `vault_meta`.
+
 ## Quality
 
 ```bash

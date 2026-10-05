@@ -45,12 +45,12 @@ jobs:
 
       # Generated files (*.g.dart, *.config.dart) are
       # excluded from the count -- they're regenerated glue, not code this
-      # repo's tests are meant to exercise. 10% is a floor below current
-      # hand-written coverage (~14%), meant to catch regressions; raise it
+      # repo's tests are meant to exercise. 20% is a floor below current
+      # hand-written coverage (~27%), meant to catch regressions; raise it
       # as more tests are added rather than treating it as a target.
       - name: Enforce coverage floor
         run: |
-          awk -v thresh=10 '
+          awk -v thresh=20 '
             /^SF:/ { file=$0; sub("^SF:", "", file); skip = (file ~ /\.g\.dart$/ || file ~ /\.config\.dart$/) }
             /^LF:/ { n=$0; sub("^LF:", "", n); if (!skip) lf += n }
             /^LH:/ { n=$0; sub("^LH:", "", n); if (!skip) lh += n }

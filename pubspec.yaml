@@ -53,6 +53,7 @@ dependencies:
   slang_flutter: ^4.18.0
   injectable: ^3.0.0
   marionette_flutter: ^0.6.0
+  cryptography: ^2.9.0
 
 dev_dependencies:
   flutter_test:
