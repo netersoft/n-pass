@@ -26,6 +26,34 @@ class PasswordGeneratorOptions {
     this.excludeAmbiguous = false,
   });
 
+  factory PasswordGeneratorOptions.fromJson(Map<String, dynamic> json) => PasswordGeneratorOptions(
+    length: (json['length'] as int? ?? 20).clamp(minLength, maxLength),
+    uppercase: json['uppercase'] as bool? ?? true,
+    lowercase: json['lowercase'] as bool? ?? true,
+    digits: json['digits'] as bool? ?? true,
+    symbols: json['symbols'] as bool? ?? true,
+    excludeAmbiguous: json['excludeAmbiguous'] as bool? ?? false,
+  );
+
+  Map<String, dynamic> toJson() => {
+    'length': length,
+    'uppercase': uppercase,
+    'lowercase': lowercase,
+    'digits': digits,
+    'symbols': symbols,
+    'excludeAmbiguous': excludeAmbiguous,
+  };
+
+  PasswordGeneratorOptions copyWith({int? length, bool? uppercase, bool? lowercase, bool? digits, bool? symbols, bool? excludeAmbiguous}) =>
+      PasswordGeneratorOptions(
+        length: length ?? this.length,
+        uppercase: uppercase ?? this.uppercase,
+        lowercase: lowercase ?? this.lowercase,
+        digits: digits ?? this.digits,
+        symbols: symbols ?? this.symbols,
+        excludeAmbiguous: excludeAmbiguous ?? this.excludeAmbiguous,
+      );
+
   List<String> get charsets => [
     if (uppercase) uppercaseChars,
     if (lowercase) lowercaseChars,

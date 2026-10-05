@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
+import '../../../core/services/i18n/translations.g.dart';
 import '../../themes/app_theme.dart';
 
 /// Obscured text field with a show/hide toggle. Disables suggestions and
@@ -15,6 +16,10 @@ class PasswordField extends StatefulWidget {
   final bool autofocus;
   final bool enabled;
   final String? errorText;
+  final String? initialValue;
+
+  /// Extra buttons shown before the show/hide toggle (e.g. generate).
+  final List<Widget> actions;
 
   const PasswordField({
     required this.name,
@@ -27,6 +32,8 @@ class PasswordField extends StatefulWidget {
     this.autofocus = false,
     this.enabled = true,
     this.errorText,
+    this.initialValue,
+    this.actions = const [],
   });
 
   @override
@@ -39,6 +46,7 @@ class _PasswordFieldState extends State<PasswordField> {
   @override
   Widget build(BuildContext context) => FormBuilderTextField(
     name: widget.name,
+    initialValue: widget.initialValue,
     obscureText: _obscured,
     enableSuggestions: false,
     autocorrect: false,
@@ -53,9 +61,16 @@ class _PasswordFieldState extends State<PasswordField> {
       errorText: widget.errorText,
       errorMaxLines: 3,
       prefixIcon: Icon(Icons.key, color: AppTheme.getIconColor()),
-      suffixIcon: IconButton(
-        icon: Icon(_obscured ? Icons.visibility : Icons.visibility_off),
-        onPressed: () => setState(() => _obscured = !_obscured),
+      suffixIcon: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ...widget.actions,
+          IconButton(
+            tooltip: _obscured ? context.t.show : context.t.hide,
+            icon: Icon(_obscured ? Icons.visibility : Icons.visibility_off),
+            onPressed: () => setState(() => _obscured = !_obscured),
+          ),
+        ],
       ),
       border: const OutlineInputBorder(),
     ),
