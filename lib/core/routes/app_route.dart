@@ -5,6 +5,8 @@ import '../../view/redirection.dart';
 import '../../view/screens/account/settings_screen.dart';
 import '../../view/screens/main_screen.dart';
 import '../../view/screens/onboarding/intro_screen.dart';
+import '../../view/screens/vault/create_vault_screen.dart';
+import '../../view/screens/vault/unlock_screen.dart';
 import 'swipeable_page_route.dart';
 
 part 'app_route.g.dart';
@@ -31,6 +33,26 @@ class IntroRoute extends GoRouteData with $IntroRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) => const IntroScreen();
+}
+
+@TypedGoRoute<CreateVaultRoute>(path: '/create')
+class CreateVaultRoute extends GoRouteData with $CreateVaultRoute {
+  const CreateVaultRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const CreateVaultScreen();
+}
+
+@TypedGoRoute<UnlockRoute>(path: '/unlock')
+class UnlockRoute extends GoRouteData with $UnlockRoute {
+  const UnlockRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) => CustomTransitionPage<void>(
+    key: state.pageKey,
+    child: const UnlockScreen(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child),
+  );
 }
 
 @TypedGoRoute<MainRoute>(

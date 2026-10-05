@@ -83,13 +83,29 @@ abstract class DialogHelper {
     );
   }
 
-  static void showConnectionError(
-    BuildContext context,
-  ) {
-    showInfo(
-      context,
-      title: context.t.connectionErrorTitle,
-      content: context.t.connectionErrorContent,
+  /// Asks a yes/no question. Resolves to true only when [confirmLabel] is
+  /// tapped.
+  static Future<bool> confirm(
+    BuildContext context, {
+    required String title,
+    required String content,
+    required String confirmLabel,
+    bool destructive = false,
+  }) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0)),
+        content: Text(content),
+        actions: <Widget>[
+          TextButton(onPressed: () => context.pop(false), child: Text(context.t.cancel)),
+          TextButton(
+            onPressed: () => context.pop(true),
+            child: Text(confirmLabel, style: TextStyle(color: destructive ? Theme.of(context).colorScheme.error : AppTheme.primaryColor)),
+          ),
+        ],
+      ),
     );
+    return result ?? false;
   }
 }

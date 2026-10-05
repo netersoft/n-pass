@@ -53,7 +53,7 @@ void main() {
       expect(state2.currentIndex, 0);
     });
 
-    test('onDone sets firstOpening to false and navigates to providers', () {
+    test('onDone sets firstOpening to false and navigates to vault creation', () {
       when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async => true);
 
       final container = ProviderContainer();
@@ -62,7 +62,7 @@ void main() {
       container.read(introProvider.notifier).onDone();
 
       verify(() => mockPrefs.setBool('appFirstOpening', false)).called(1);
-      verify(() => mockNav.pushReplacement(any(), arguments: any(named: 'arguments'))).called(1);
+      verify(() => mockNav.pushReplacement('/create', arguments: any(named: 'arguments'))).called(1);
     });
   });
 }

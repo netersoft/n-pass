@@ -14,53 +14,36 @@ class IntroScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final intro = ref.watch(introProvider);
 
-    final introPages = [
-      PageViewModel(
-        titleWidget: Column(
-          children: [
-            Text(
-              context.t.appName,
-              style: const TextStyle(
-                fontFamily: 'open_sans',
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-                fontSize: 42.0,
-              ),
-            ),
-            const Text(
-              '',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'open_sans',
-                color: Colors.grey,
-                fontSize: 18.0,
-              ),
-            ),
-          ],
-        ),
-        bodyWidget: const SizedBox.shrink(),
-        image: const Column(),
-        decoration: PageDecoration(
-          pageColor: AppTheme.pickColor(
-            light: (intro.currentIndex + 1).isEven ? AppTheme.secondaryColor : AppTheme.primaryColor,
-            dark: AppColors.blackRussian,
-          ),
-          imageAlignment: Alignment.topCenter,
-          imageFlex: 3,
-        ),
-        reverse: true,
+    final pageColor = AppTheme.pickColor(
+      light: intro.currentIndex.isOdd ? AppTheme.secondaryColor : AppTheme.primaryColor,
+      dark: AppColors.blackRussian,
+    );
+
+    PageViewModel page(IconData icon, String title, String body) => PageViewModel(
+      titleWidget: Text(
+        title,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontFamily: 'open_sans', fontWeight: FontWeight.w600, color: Colors.white, fontSize: 28.0),
       ),
+      bodyWidget: Text(
+        body,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontFamily: 'open_sans', color: Colors.white70, fontSize: 18.0),
+      ),
+      image: Center(child: Icon(icon, size: 120, color: Colors.white)),
+      decoration: PageDecoration(pageColor: pageColor, imageFlex: 2, bodyFlex: 2),
+    );
+
+    final introPages = [
+      page(Icons.shield_outlined, context.t.introTitle1, context.t.introBody1),
+      page(Icons.cloud_off_outlined, context.t.introTitle2, context.t.introBody2),
+      page(Icons.key_outlined, context.t.introTitle3, context.t.introBody3),
     ];
 
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(0.0),
-        child: AppBar(
-          backgroundColor: AppTheme.pickColor(
-            light: (intro.currentIndex + 1).isEven ? AppTheme.secondaryColor : AppTheme.primaryColor,
-            dark: AppColors.blackRussian,
-          ),
-        ),
+        child: AppBar(backgroundColor: pageColor),
       ),
       body: SafeArea(
         child: Builder(
