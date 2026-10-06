@@ -6,7 +6,7 @@
 
 NPass is an offline password manager for Android and iOS. Accounts are encrypted on the device with a key derived from a master password, and never leave it except through an encrypted backup file the user exports.
 
-This is a full rewrite in Flutter of the original native Android app (`com.neteru.n_pass`, Java, 2018–2020). The old project is kept locally under `.legacy/` (git-ignored) for reference only; no data is migrated from it.
+This is a full rewrite in Flutter of the original native Android app (`com.neteru.n_pass`, Java, 2018–2020). The old project is archived at [netersoft/n-pass-legacy](https://github.com/netersoft/n-pass-legacy); no data is migrated from it.
 
 The app is fully offline: no backend, no analytics, no crash reporting, no Firebase.
 
