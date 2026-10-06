@@ -43,6 +43,11 @@ class AboutScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Text('${context.t.appDescription}\n\n${context.t.legacyNotice}', textAlign: TextAlign.center),
             ),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Text(context.t.licenseNotice, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
+            ),
             const SizedBox(height: 24),
             const Divider(height: 1),
             ListTile(
