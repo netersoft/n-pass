@@ -130,4 +130,6 @@ flutter {
 
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
+    // Play In-App Review, called from MainActivity (see ReviewService).
+    implementation 'com.google.android.play:review:2.0.2'
 }

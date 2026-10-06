@@ -1,4 +1,5 @@
 import Flutter
+import StoreKit
 import UIKit
 import UniformTypeIdentifiers
 
@@ -13,6 +14,22 @@ import UniformTypeIdentifiers
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+
+    // In-app review, called by ReviewService. StoreKit decides whether the
+    // sheet shows and never says, so this always answers true.
+    if let reviewRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "ReviewChannel") {
+      FlutterMethodChannel(name: "com.neteru.n_pass/review", binaryMessenger: reviewRegistrar.messenger())
+        .setMethodCallHandler { call, result in
+          guard call.method == "requestReview" else {
+            result(FlutterMethodNotImplemented)
+            return
+          }
+          if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+            SKStoreReviewController.requestReview(in: scene)
+          }
+          result(true)
+        }
+    }
 
     guard let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "NPassClipboard") else { return }
     let channel = FlutterMethodChannel(name: "npass/clipboard", binaryMessenger: registrar.messenger())

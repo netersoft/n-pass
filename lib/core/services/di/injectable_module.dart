@@ -8,6 +8,7 @@ import '../camera/service.dart';
 import '../clipboard/service.dart';
 import '../files/service.dart';
 import '../hive/service.dart';
+import '../review/service.dart';
 import '../shared_preferences/service.dart';
 import '../vault/service.dart';
 import '../vault/store.dart';
@@ -16,6 +17,9 @@ import '../vault/store.dart';
 abstract class AppModule {
   @singleton
   NavigationHelper get navigationHelper => NavigationHelper();
+
+  @singleton
+  ReviewService get reviewService => ReviewService();
 
   @singleton
   @preResolve

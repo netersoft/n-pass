@@ -1,14 +1,20 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../models/vault_entry.dart';
 import '../../services/backup/service.dart';
 import '../../services/di/locator.dart';
+import '../../services/review/service.dart';
 import '../../services/shared_preferences/keys.dart';
 import '../../services/shared_preferences/service.dart';
 import '../../services/vault/service.dart';
 import '../../tools/functions/entry_functions.dart';
 
 part 'entries_provider.g.dart';
+
+/// Accounts after which the in-app review sheet is requested.
+const _entriesBeforeReview = 5;
 
 /// Decrypted entries, held only while the vault is unlocked: locking the
 /// vault rebuilds this provider with an empty list.
@@ -29,7 +35,11 @@ class Entries extends _$Entries {
   Future<void> save(VaultEntry entry) async {
     await _vault.saveEntry(entry);
     final current = state.value ?? const [];
-    state = AsyncData([...current.where((e) => e.id != entry.id), entry]);
+    final entries = [...current.where((e) => e.id != entry.id), entry];
+    state = AsyncData(entries);
+    if (entries.length > current.length && entries.length >= _entriesBeforeReview) {
+      unawaited(locator<ReviewService>().requestOnce());
+    }
   }
 
   /// Not an edit: keeps [VaultEntry.updatedAt], so the entry doesn't jump to
