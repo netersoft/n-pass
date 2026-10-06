@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/routes/app_route.dart';
@@ -43,7 +42,7 @@ class ErrorScreenContent extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset('assets/images/404.svg', width: 350.0),
+          const Icon(Icons.broken_image_outlined, size: 160, color: Colors.orange),
           const SizedBox(height: 10),
           Text(
             error?.message ?? context.t.anErrorOccurred,
