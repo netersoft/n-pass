@@ -3,7 +3,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/services/i18n/translations.g.dart';
-import '../../themes/app_theme.dart';
 import '../inputs/password_field.dart';
 
 /// Asks for a password in a dialog and resolves to it, or to null when
@@ -139,7 +138,7 @@ class _PasswordPromptDialogState extends State<_PasswordPromptDialog> {
         onPressed: _busy ? null : _submit,
         child: _busy
             ? const SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2))
-            : Text(widget.submitLabel, style: const TextStyle(color: AppTheme.primaryColor)),
+            : Text(widget.submitLabel, style: TextStyle(color: Theme.of(context).colorScheme.primary)),
       ),
     ],
   );

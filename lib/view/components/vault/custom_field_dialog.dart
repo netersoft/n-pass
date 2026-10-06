@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/models/vault_entry.dart';
 import '../../../core/services/i18n/translations.g.dart';
-import '../../themes/app_theme.dart';
 
 /// Asks for the name of a new custom field and whether its value is secret.
 /// Resolves to an empty field, or null when cancelled.
@@ -63,7 +62,7 @@ class _CustomFieldDialogState extends State<_CustomFieldDialog> {
       TextButton(onPressed: () => context.pop(), child: Text(context.t.cancel)),
       TextButton(
         onPressed: _submit,
-        child: Text(context.t.add, style: const TextStyle(color: AppTheme.primaryColor)),
+        child: Text(context.t.add, style: TextStyle(color: Theme.of(context).colorScheme.primary)),
       ),
     ],
   );

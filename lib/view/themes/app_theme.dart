@@ -12,6 +12,10 @@ import 'app_colors.dart';
 
 abstract class AppTheme {
   static const Color primaryColor = Color(0xFF0000CD);
+
+  /// Brand blue lightened for text, outlines and icons on dark surfaces,
+  /// where [primaryColor] is unreadable. Filled backgrounds keep [primaryColor].
+  static const Color primaryOnDark = Color(0xFFB4BCFF);
   static const Color secondaryColor = Color(0xFF009EE3);
   static const Color accentColor = Color(0xFFF5F5F5);
 
@@ -130,7 +134,10 @@ abstract class AppTheme {
 
   static ThemeData _buildDarkTheme(BuildContext context) {
     final ColorScheme colorScheme = const ColorScheme.dark().copyWith(
-      primary: primaryColor,
+      primary: primaryOnDark,
+      onPrimary: const Color(0xFF00007A),
+      primaryContainer: primaryColor,
+      onPrimaryContainer: Colors.white,
       secondary: secondaryColor,
     );
     final ThemeData base = ThemeData(

@@ -40,7 +40,7 @@ class FormTextField extends StatelessWidget {
         name: name,
         initialValue: initialValue,
         style: TextStyle(color: AppTheme.getTextColor()),
-        cursorColor: AppTheme.primaryColor,
+        cursorColor: Theme.of(context).colorScheme.primary,
         keyboardType: keyboardType,
         inputFormatters: inputFormatters,
         maxLines: maxLines,
