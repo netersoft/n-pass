@@ -1,6 +1,6 @@
 # NPass - Agent Guide
 
-Offline password manager (Android + iOS), Flutter rewrite of the legacy native app kept in `.legacy/` (git-ignored, reference only).
+Offline password manager (Android + iOS), Flutter rewrite of the legacy native app archived at `netersoft/n-pass-legacy` (reference only).
 
 ## Project Setup
 
