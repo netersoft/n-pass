@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -266,15 +265,6 @@ class SettingsListWrapper extends ConsumerWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          ListTile(
-                            title: Text(context.t.byWhatsapp),
-                            trailing: SvgPicture.asset(
-                              'assets/images/whatsapp.svg',
-                              width: 21.0,
-                              height: 21.0,
-                            ),
-                            onTap: () => settings.share(ShareOptions.whatsapp),
-                          ),
                           ListTile(
                             title: Text(context.t.byEmail),
                             trailing: const Icon(

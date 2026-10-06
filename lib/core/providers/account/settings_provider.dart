@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -39,14 +38,6 @@ class Settings extends _$Settings {
   Future<void> share(ShareOptions options) async {
     try {
       switch (options) {
-        case ShareOptions.whatsapp:
-          unawaited(
-            launchUrl(
-              Uri.parse(
-                "whatsapp:${Platform.isIOS ? '//wa.me/' : '//send?'}text=${Uri.encodeFull('$_shareMessage\n$_sharePlayStoreUrl')}",
-              ),
-            ),
-          );
         case ShareOptions.email:
           Uri emailLaunchUri = Uri(
             scheme: 'mailto',
@@ -125,4 +116,4 @@ class SettingsState {
   SettingsState copyWith({bool? isLoading}) => SettingsState(isLoading: isLoading ?? this.isLoading);
 }
 
-enum ShareOptions { whatsapp, email, free, sms }
+enum ShareOptions { email, free, sms }
