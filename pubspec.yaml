@@ -132,10 +132,6 @@ flutter:
     - assets/wordlists/
 
   fonts:
-    - family: proxima_nova
-      fonts:
-        - asset: assets/fonts/proxima_nova.otf
-
     - family: montserrat
       fonts:
         - asset: assets/fonts/montserrat/montserrat_italic.ttf
