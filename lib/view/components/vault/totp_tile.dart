@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../../../core/models/totp_config.dart';
 import '../../../core/services/i18n/translations.g.dart';
 import '../../../core/tools/functions/totp.dart';
-import '../../themes/app_theme.dart';
 import 'copy_feedback.dart';
 
 /// The current 2FA code with a countdown to the next one.
@@ -62,7 +61,7 @@ class _TotpTileState extends State<TotpTile> {
                 CircularProgressIndicator(
                   value: remaining / widget.config.period,
                   strokeWidth: 3,
-                  color: ending ? Theme.of(context).colorScheme.error : AppTheme.primaryColor,
+                  color: ending ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.primary,
                   backgroundColor: Colors.grey.withValues(alpha: 0.2),
                 ),
                 Text('$remaining', style: Theme.of(context).textTheme.labelSmall),

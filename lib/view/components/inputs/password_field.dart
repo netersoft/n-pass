@@ -54,7 +54,7 @@ class _PasswordFieldState extends State<PasswordField> {
     enabled: widget.enabled,
     keyboardType: TextInputType.visiblePassword,
     textInputAction: widget.textInputAction,
-    cursorColor: AppTheme.primaryColor,
+    cursorColor: Theme.of(context).colorScheme.primary,
     style: TextStyle(color: AppTheme.getTextColor()),
     decoration: InputDecoration(
       labelText: widget.label,
