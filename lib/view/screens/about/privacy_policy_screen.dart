@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/services/i18n/translations.g.dart';
 import '../../themes/app_theme.dart';
@@ -21,7 +22,11 @@ class PrivacyPolicyScreen extends StatelessWidget {
       builder: (context, snapshot) => switch (snapshot.data) {
         final html? => SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
-          child: HtmlWidget(html, textStyle: Theme.of(context).textTheme.bodyMedium),
+          child: HtmlWidget(
+            html,
+            textStyle: Theme.of(context).textTheme.bodyMedium,
+            onTapUrl: (url) => launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
+          ),
         ),
         null => const Center(child: CircularProgressIndicator()),
       },
