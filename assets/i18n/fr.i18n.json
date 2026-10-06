@@ -241,5 +241,6 @@
   "notTotpQr": "Ce QR code n'est pas un code 2FA",
   "noQrInImage": "Aucun QR code lisible dans cette image",
   "cameraDenied": "NPass n'a pas accès à la caméra. Autorisez-la dans les réglages du téléphone, ou importez une capture d'écran du QR code.",
-  "openSettings": "Ouvrir les réglages"
+  "openSettings": "Ouvrir les réglages",
+  "licenseNotice": "Logiciel libre sous licence GNU GPL v3 (code) et CC BY-SA 4.0 (contenus). © 2018-2026 Netersoft"
 }
