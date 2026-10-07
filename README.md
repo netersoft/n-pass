@@ -16,7 +16,7 @@ The app is fully offline: no backend, no analytics, no crash reporting, no Fireb
 - State management: Riverpod (`riverpod_generator`, code-gen)
 - Routing: go_router (`go_router_builder`)
 - Local storage: Hive CE (encrypted boxes) + `flutter_secure_storage` + SharedPreferences
-- i18n: [Slang](https://pub.dev/packages/slang) (French base locale, English)
+- i18n: [Slang](https://pub.dev/packages/slang) (French and English, English base locale)
 
 ## Prerequisites
 

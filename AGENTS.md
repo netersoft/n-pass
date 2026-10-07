@@ -40,7 +40,7 @@ flutter test
 - **State management**: Riverpod with code generation (`riverpod_generator`)
 - **Routing**: go_router (`go_router_builder`)
 - **Local storage**: Hive CE + `flutter_secure_storage` + SharedPreferences
-- **i18n**: Slang, `assets/i18n/*.i18n.json` (base locale fr)
+- **i18n**: Slang, `assets/i18n/*.i18n.json` (base locale en, the fallback for unsupported device languages; tests run in French, see `test/flutter_test_config.dart`)
 
 ## Constraints
 
