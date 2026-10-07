@@ -6,7 +6,7 @@ listings need it at a public URL, served by GitHub Pages from the
 netersoft/netersoft.github.io repository. Run this after editing the policy,
 then commit and push that repository:
 
-    python3 tool/build_privacy_pages.py ~/Dev/Projects/Web/netersoft.github.io
+    python3 tool/build_privacy_pages.py ../netersoft.github.io
 
 Writes <site>/n-pass/privacy/index.html (fr) and
 <site>/n-pass/privacy/en/index.html.
@@ -32,7 +32,7 @@ TEMPLATE = """<!doctype html>
 <title>{title}</title>
 <link rel="canonical" href="{url}">
 {alternates}
-<style>
+{redirect}<style>
   :root {{ color-scheme: light dark; --text: #202124; --muted: #5f6368; --bg: #ffffff; --accent: #0000cd; --line: #e0e0e0; }}
   @media (prefers-color-scheme: dark) {{
     :root {{ --text: #f2f2f2; --muted: #a9a9a9; --bg: #202124; --accent: #b4bcff; --line: #3c4043; }}
@@ -50,11 +50,27 @@ TEMPLATE = """<!doctype html>
 </head>
 <body>
 <main>
-<nav><strong>NPass</strong><a href="{switch_href}" hreflang="{switch_lang}">{switch_label}</a></nav>
+<nav><strong>NPass</strong><a href="{switch_href}" hreflang="{switch_lang}" onclick="try {{ localStorage.setItem('lang', '{switch_lang}'); }} catch (e) {{}}">{switch_label}</a></nav>
 {body}
 </main>
 </body>
 </html>
+"""
+
+# Same rule as the netersoft.github.io home page: the French page sends browsers
+# whose preferred language isn't French to the English one, unless a language
+# was picked with a language link on the site (shared localStorage key).
+REDIRECT = """<script>
+(function () {
+  var lang = null;
+  try { lang = localStorage.getItem('lang'); } catch (e) {}
+  if (!lang) {
+    var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+    lang = /^fr(-|$)/i.test(langs[0]) ? 'fr' : 'en';
+  }
+  if (lang === 'en') location.replace('en/' + location.search + location.hash);
+})();
+</script>
 """
 
 
@@ -73,6 +89,7 @@ def main() -> None:
             title=title,
             url=BASE_URL + sub,
             alternates=alternates,
+            redirect=REDIRECT if lang == 'fr' else '',
             switch_href=BASE_URL + LOCALES[other][0],
             switch_lang=other,
             switch_label=switch_label,
