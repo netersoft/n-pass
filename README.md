@@ -10,6 +10,23 @@ This is a full rewrite in Flutter of the original native Android app (`com.neter
 
 The app is fully offline: no backend, no analytics, no crash reporting, no Firebase.
 
+## Screenshots
+
+<table>
+  <tr>
+    <td><img src="store/screenshots/en/1_list.png" width="260" alt="All your passwords, safe on your phone"></td>
+    <td><img src="store/screenshots/en/2_detail.png" width="260" alt="Built-in 2FA codes for your accounts"></td>
+    <td><img src="store/screenshots/en/3_generator.png" width="260" alt="Strong passwords in one tap"></td>
+  </tr>
+  <tr>
+    <td><img src="store/screenshots/en/4_unlock.png" width="260" alt="Locked by your master password"></td>
+    <td><img src="store/screenshots/en/5_create.png" width="260" alt="Encrypted on your device, nowhere else"></td>
+    <td><img src="store/screenshots/en/6_settings.png" width="260" alt="Auto-lock, biometrics and encrypted backups"></td>
+  </tr>
+</table>
+
+The Play Store images, in English; other languages are in `store/screenshots/<lang>/`.
+
 ## Tech stack
 
 - Mobile: Flutter, Dart SDK `>=3.8.0 <4.0.0`
