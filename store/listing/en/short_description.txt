@@ -1,0 +1,1 @@
+Offline password manager with 2FA codes. Encrypted, no account, no ads.

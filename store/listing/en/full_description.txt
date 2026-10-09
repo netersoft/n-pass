@@ -1,0 +1,35 @@
+NPass is an offline password manager: all your accounts in an encrypted vault on your phone, protected by a single master password. No account, no server, not even Internet access: your passwords never leave your device.
+
+★ ALL YOUR ACCOUNTS IN ONE PLACE
+• For each account: title, username, password, website and notes
+• Custom fields for a PIN code, a security question…, hidden if you like
+• Categories and favorites, search, sort by name or by last update
+• Copy a password in one tap: it is hidden from the keyboard suggestions and cleared from the clipboard after 30 seconds
+
+★ BUILT-IN 2FA CODES
+Turn on two-factor authentication on your accounts: NPass shows the codes (TOTP), like an authenticator app. Scan the QR code shown by the website, import a screenshot of it, or paste the key or the otpauth:// link. Your 2FA keys are encrypted with the rest of the account and included in your backups.
+
+★ STRONG PASSWORDS
+• Password generator: length, uppercase, lowercase, digits, symbols, without ambiguous characters
+• Passphrases: words that are easy to remember and hard to guess
+• Strength meter for your master password
+• Reuse alert: NPass tells you when the same password protects several accounts
+
+★ SECURITY
+• AES-256-GCM encryption, with a key derived from your master password by Argon2id
+• Your master password is never stored: nobody, not even Netersoft, can read your accounts. Choose it carefully, it cannot be recovered
+• Optional fingerprint or face unlock
+• Auto-lock after the delay you choose, or as soon as you leave the app
+• Screenshots blocked, and the app hidden in the recent apps screen
+
+★ ENCRYPTED BACKUPS
+Export your accounts to a file encrypted with the password of your choice, keep it on your computer or in the cloud, and restore it on a new phone, merging it or replacing the vault.
+
+★ FREE AND RESPECTFUL OF YOUR PRIVACY
+• No ads, no account, no data collected
+• Works fully offline
+• Light and dark theme
+• In English and French
+• Free software (GNU GPL v3)
+
+Email, bank, social networks, streaming, Wi-Fi: keep all your passwords safe, and remember only one.

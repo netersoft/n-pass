@@ -1,0 +1,35 @@
+NPass est un gestionnaire de mots de passe hors ligne : tous vos comptes dans un coffre chiffré sur votre téléphone, protégé par un seul mot de passe maître. Pas de compte, pas de serveur, même pas d’accès à internet : vos mots de passe ne quittent jamais votre appareil.
+
+★ TOUS VOS COMPTES AU MÊME ENDROIT
+• Pour chaque compte : titre, identifiant, mot de passe, site web et notes
+• Des champs personnalisés pour un code PIN, une question secrète…, masqués si vous le souhaitez
+• Catégories et favoris, recherche, tri par nom ou par date de modification
+• Copiez un mot de passe en un geste : il est caché des suggestions du clavier et effacé du presse-papiers au bout de 30 secondes
+
+★ DES CODES 2FA INTÉGRÉS
+Activez la double authentification sur vos comptes : NPass affiche les codes (TOTP), comme une application d’authentification. Scannez le QR code affiché par le site, importez-en une capture d’écran, ou collez la clé ou le lien otpauth://. Vos clés 2FA sont chiffrées avec le reste du compte et incluses dans vos sauvegardes.
+
+★ DES MOTS DE PASSE SOLIDES
+• Générateur de mots de passe : longueur, majuscules, minuscules, chiffres, symboles, sans caractères ambigus
+• Phrases de passe : des mots faciles à retenir et difficiles à deviner
+• Indicateur de robustesse pour votre mot de passe maître
+• Alerte de réutilisation : NPass vous prévient quand un même mot de passe protège plusieurs comptes
+
+★ LA SÉCURITÉ
+• Chiffrement AES-256-GCM, avec une clé dérivée de votre mot de passe maître par Argon2id
+• Votre mot de passe maître n’est jamais enregistré : personne, pas même Netersoft, ne peut lire vos comptes. Choisissez-le bien, il ne peut pas être récupéré
+• Déverrouillage par empreinte ou visage, en option
+• Verrouillage automatique après le délai de votre choix, ou dès que vous quittez l’app
+• Captures d’écran bloquées, et app masquée dans l’écran des apps récentes
+
+★ DES SAUVEGARDES CHIFFRÉES
+Exportez vos comptes dans un fichier chiffré avec le mot de passe de votre choix, gardez-le sur votre ordinateur ou dans le cloud, et restaurez-le sur un nouveau téléphone, en le fusionnant ou en remplaçant le coffre.
+
+★ GRATUIT ET RESPECTUEUX DE VOTRE VIE PRIVÉE
+• Sans publicité, sans compte, aucune donnée collectée
+• Fonctionne entièrement hors ligne
+• Thème clair et sombre
+• En français et en anglais
+• Logiciel libre (GNU GPL v3)
+
+E-mail, banque, réseaux sociaux, streaming, Wi-Fi : gardez tous vos mots de passe en sécurité, et n’en retenez plus qu’un.
