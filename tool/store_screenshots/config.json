@@ -1,0 +1,26 @@
+{
+  "font": "assets/fonts/montserrat/montserrat_bold.ttf",
+  "title_color": "#ffffff",
+  "background_top": "#0000cd",
+  "background_bottom": "#00007a",
+  "bezel_color": "#14141f",
+  "screens": ["list", "detail", "generator", "unlock", "create", "settings"],
+  "titles": {
+    "en": [
+      "All your passwords, safe on your phone",
+      "Built-in 2FA codes for your accounts",
+      "Strong passwords in one tap",
+      "Locked by your master password",
+      "Encrypted on your device, nowhere else",
+      "Auto-lock, biometrics and encrypted backups"
+    ],
+    "fr": [
+      "Tous vos mots de passe, à l’abri sur votre téléphone",
+      "Les codes 2FA de vos comptes, intégrés",
+      "Des mots de passe solides en un geste",
+      "Verrouillé par votre mot de passe maître",
+      "Chiffré sur votre appareil, et nulle part ailleurs",
+      "Verrouillage auto, biométrie et sauvegardes chiffrées"
+    ]
+  }
+}
