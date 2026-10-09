@@ -6,6 +6,18 @@ light-theme capture in a phone frame.
 
 The vault in them is a demo one: made-up accounts from `make_demo_backup.dart`, no real data.
 
+## Feature graphic
+
+`store/feature_graphic/<lang>.png` is the 1024×500 banner at the top of the listing: the
+app's icon, name and a tagline next to two of the screenshots, cut out of
+`store/screenshots/<lang>/`. Rebuild it after the screenshots:
+
+```bash
+python3 tool/store_screenshots/feature.py
+```
+
+Its icon, screens, names and taglines are under `feature` in `config.json`.
+
 ## Regenerate them
 
 1. Start the shared emulator (`test-phone`, 1080×2400) and install a **debug** build: release
