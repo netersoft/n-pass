@@ -22,5 +22,17 @@
       "Chiffré sur votre appareil, et nulle part ailleurs",
       "Verrouillage auto, biométrie et sauvegardes chiffrées"
     ]
+  },
+  "feature": {
+    "icon": "assets/images/launcher/icon.png",
+    "screens": ["list", "detail"],
+    "name": {
+      "fr": "NPass",
+      "en": "NPass"
+    },
+    "tagline": {
+      "fr": "Vos mots de passe et codes 2FA, chiffrés et hors ligne",
+      "en": "Your passwords and 2FA codes, encrypted and offline"
+    }
   }
 }
