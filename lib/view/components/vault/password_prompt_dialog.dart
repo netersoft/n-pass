@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../core/services/i18n/translations.g.dart';
 import '../inputs/password_field.dart';

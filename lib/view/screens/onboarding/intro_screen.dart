@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../core/providers/onboarding/intro_provider.dart';
 import '../../../core/services/i18n/translations.g.dart';
