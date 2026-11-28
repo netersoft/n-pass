@@ -34,7 +34,6 @@ dependencies:
   flutter_native_splash: ^2.4.8 # dart run flutter_native_splash:create
   go_router: ^17.3.0
   settings_ui: ^4.0.2
-  modal_bottom_sheet: ^3.0.0
   flutter_riverpod: ^3.3.2
   riverpod_annotation: ^4.0.3
   flutter_keyboard_visibility: ^7.0.1

@@ -1,5 +1,4 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class FloatingModal extends StatelessWidget {
   final Widget child;
@@ -21,18 +20,14 @@ class FloatingModal extends StatelessWidget {
   );
 }
 
-Future<T> showFloatingModalBottomSheet<T>({
+Future<T?> showFloatingModalBottomSheet<T>({
   required BuildContext context,
   required WidgetBuilder builder,
   Color? backgroundColor,
-}) async {
-  final result = await showCustomModalBottomSheet(
-    context: context,
-    builder: builder,
-    containerWidget: (_, animation, child) => FloatingModal(
-      child: child,
-    ),
-  );
-
-  return result;
-}
+}) => showModalBottomSheet<T>(
+  context: context,
+  isScrollControlled: true,
+  backgroundColor: Colors.transparent,
+  elevation: 0,
+  builder: (context) => FloatingModal(backgroundColor: backgroundColor, child: builder(context)),
+);
