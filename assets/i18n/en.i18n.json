@@ -242,5 +242,11 @@
   "noQrInImage": "No readable QR code in this image",
   "cameraDenied": "NPass can't use the camera. Allow it in the phone settings, or import a screenshot of the QR code.",
   "openSettings": "Open settings",
-  "licenseNotice": "Free software under the GNU GPL v3 (code) and CC BY-SA 4.0 (content). © 2018-2026 Netersoft"
+  "licenseNotice": "Free software under the GNU GPL v3 (code) and CC BY-SA 4.0 (content). © 2018-2026 Netersoft",
+  "rateApp": "Rate the app",
+  "rateTitle": "Enjoying NPass?",
+  "rateMessage": "A rating or a comment on Google Play helps other people find NPass. It takes a minute.",
+  "rateAction": "Rate",
+  "rateLater": "Later",
+  "rateNever": "Don't ask again"
 }
