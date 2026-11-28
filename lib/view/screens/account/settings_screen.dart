@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,8 +12,10 @@ import '../../../core/providers/account/security_settings_provider.dart';
 import '../../../core/providers/account/settings_provider.dart';
 import '../../../core/routes/app_route.dart';
 import '../../../core/services/auto_lock/service.dart';
+import '../../../core/services/di/locator.dart';
 import '../../../core/services/i18n/config.dart';
 import '../../../core/services/i18n/translations.g.dart';
+import '../../../core/services/review/service.dart';
 import '../../components/misc/floating_modal.dart';
 import '../../themes/app_theme.dart';
 
@@ -252,6 +257,13 @@ class SettingsListWrapper extends ConsumerWidget {
               title: Text(context.t.privacyPolicy),
               onPressed: (context) => const PrivacyPolicyRoute().push<void>(context),
             ),
+            if (Platform.isAndroid)
+              SettingsTile.navigation(
+                leading: const Icon(Icons.star_outline),
+                trailing: const Icon(Icons.chevron_right),
+                title: Text(context.t.rateApp),
+                onPressed: (context) => unawaited(locator<ReviewService>().openListing()),
+              ),
             SettingsTile.navigation(
               leading: const Icon(Icons.campaign),
               trailing: const Icon(Icons.chevron_right),
