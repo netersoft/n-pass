@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../view/screens/error/error_screen.dart';
 import '../helpers/router/navigation_helper.dart';

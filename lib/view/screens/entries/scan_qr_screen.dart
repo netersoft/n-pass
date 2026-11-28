@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 import '../../../core/services/camera/service.dart';

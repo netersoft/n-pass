@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../core/providers/navigation/redirection_provider.dart';
 import 'themes/app_colors.dart';
